@@ -109,9 +109,9 @@ const oscTypes = {
   triangle: {
     color: COLORS.TRIANGLE,
     waveType: "triangle",
-    renderShape: (size) => {
+    renderShape: (size, useOffset = true) => {
       const sideL = Math.sqrt((size * 4) / Math.sqrt(3));
-      const offset = sideL / 10;
+      const offset = useOffset ? sideL / 10 : 0;
       const h = (-sideL * Math.sqrt(3)) / 2;
       beginShape();
       vertex(0, h / 2 - offset);
@@ -123,9 +123,9 @@ const oscTypes = {
   sawtooth: {
     color: COLORS.SAWTOOTH,
     waveType: "sawtooth",
-    renderShape: (size) => {
+    renderShape: (size, useOffset = true) => {
       const baseL = Math.sqrt(size) * 2;
-      const offset = baseL / 14;
+      const offset = useOffset ? baseL / 14 : 0;
 
       beginShape();
       vertex(-baseL / 2, -baseL / 4 - offset);
@@ -162,7 +162,8 @@ function OscillatorShape({ harmonicIndex, xPos, initialSize, type }) {
 
   const vibrato = new Tone.Vibrato({
     frequency: 0.5,
-    depth: 0,
+    depth: 1,
+    wet: 1,
   });
 
   const filter = new Tone.Filter({ type: "lowpass", frequency: 15000 });
@@ -218,6 +219,8 @@ function OscillatorShape({ harmonicIndex, xPos, initialSize, type }) {
       tickDivisions = dragStartTickDivisions + deltaY / 15;
       tickDivisions = constrain(tickDivisions, 2, 20);
       vibrato.depth.value = map(xAmplitude, 0, width / 2, 0, 1);
+      console.log(vibrato.depth.value);
+      vibrato.frequency.value = tickDivisions / 10;
     } else {
       setXPos(mousePos.x);
       if (hoveredHarmonic > -1) {
@@ -258,6 +261,7 @@ function OscillatorShape({ harmonicIndex, xPos, initialSize, type }) {
     translate(pos.x + sin((count * tickDivisions) / 100) * xAmplitude, pos.y);
     stroke(h, sat, light * 1.2);
     fill(h, sat, light, isHovered ? 0.5 : 1);
+    // rotate(count / 10);
     renderShape(size);
     pop();
 
@@ -273,8 +277,8 @@ function OscillatorShape({ harmonicIndex, xPos, initialSize, type }) {
       scale(1, map(sin(count / 5), -1, 1, 1.1, 2));
     }
     rect(0, 0, xAmplitude * 2, harmonicIndex);
-    rect(xAmplitude, 0, 2, harmonicIndex + 10);
-    rect(-xAmplitude, 0, 2, harmonicIndex + 10);
+    rect(xAmplitude, 0, 4, harmonicIndex + 10);
+    rect(-xAmplitude, 0, 4, harmonicIndex + 10);
     for (let i = 0; i < xAmplitude; i += xAmplitude / (tickDivisions / 2)) {
       fill(h, sat, light);
       noStroke();
@@ -439,7 +443,7 @@ function draw() {
     fill(...color);
     stroke(...color);
     strokeWeight(2);
-    renderShape(700);
+    renderShape(700, false);
     strokeWeight(0);
     text(i + 1, -40, -31);
     pop();
