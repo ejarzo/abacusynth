@@ -7,10 +7,10 @@ body {
   height: 100vh;
   justify-content: center;
   align-items: center;
-  background: rgb(52, 52, 65);
+  background: rgb(112, 112, 112);
 }
 
 canvas {
   /* border: 24px solid #333; */
-  box-shadow: 0 0px 500px -20px rgba(26, 39, 51, 0.5);
+  box-shadow: 0 0px 500px -20px rgba(0, 0, 0, 0.5);
 }
