@@ -1,16 +1,44 @@
 * {
   box-sizing: border-box;
+  font-family: "Roboto Mono" sans-serif;
+  font-display: swap;
 }
 
 body {
   display: flex;
-  height: 100vh;
   justify-content: center;
   align-items: center;
   background: rgb(112, 112, 112);
 }
 
 canvas {
-  /* border: 24px solid #333; */
-  box-shadow: 0 0px 500px -20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 150px -10px rgba(0, 0, 0, 0.9);
+}
+
+#sketch {
+  position: relative;
+}
+
+button {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-top: 2px solid #222;
+  border-right: 2px solid #222;
+}
+
+button:hover {
+  /* background: rgba(0, 0, 0, 0.8); */
+  background: rgba(255, 255, 255, 0.2);
+
+  /* border: 1px solid rgba(255, 255, 255, 0.3); */
+}
+
+button:active {
+  transform: scale(0.95, 0.95) translate(1px, -1px);
 }
