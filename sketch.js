@@ -25,6 +25,9 @@ let hoveredShapeIndex = -1;
 let hoveredShapeButton = null;
 let activeNoteIndex = 1;
 
+let tooltipText = "";
+let tooltipDiv;
+
 let buttonPanelPos;
 let buttonPanelWidth;
 
@@ -68,7 +71,7 @@ const dragBehaviorControls = [
   },
   {
     getIsSelected: () => keyIsDown(ALT),
-    label: "ALT",
+    label: "OPT/ALT",
     renderLogo: () => {
       translate(0, -10);
       drawCrosshair();
@@ -110,15 +113,15 @@ const getMousePos = () =>
   createVector(constrain(mouseX, X_PAD, width - X_PAD), mouseY);
 
 const showToolTip = (label) => {
-  push();
-  translate(mouseX, mouseY);
-  fill(0, 0, 10, 0.8);
-  rectMode(CORNER);
-  noStroke();
-  rect(15, -10, label.length * 7.4, 15);
-  fill(0, 0, 100, 1);
-  text(label, 15, 0);
-  pop();
+  if (!tooltipDiv.class().includes("is-visible")) {
+    tooltipDiv.addClass("is-visible");
+  }
+  tooltipDiv.html(label);
+  tooltipDiv.position(mouseX + 15, mouseY - 12);
+};
+
+hideToolTip = () => {
+  tooltipDiv.removeClass("is-visible");
 };
 
 const drawCrosshair = () => {
@@ -559,6 +562,10 @@ function setup() {
   colorMode(HSL);
   textFont("Roboto Mono");
 
+  tooltipDiv = createDiv();
+  tooltipDiv.addClass("tooltip");
+  tooltipDiv.parent("#sketch");
+
   backgroundGraphics = createGraphics(width, height);
   drawBackground(backgroundGraphics);
   const resetButton = createButton("Reset");
@@ -674,8 +681,13 @@ function draw() {
   // rectMode(CENTER);
 
   // visualizer
+
+  const visCx = width * 0.22;
+  const visCy = inputHeight + (height - inputHeight) / 2 + 10;
+
   push();
-  translate(width * 0.22, inputHeight + (height - inputHeight) / 2 + 10);
+
+  translate(visCx, visCy);
   strokeWeight(1);
 
   stroke(0, 0, 100, 0.2);
@@ -750,6 +762,20 @@ function draw() {
     hoveredShapeButton = null;
   }
 
+  if (hoveredShapeIndex > -1) {
+    if (keyIsDown(ALT)) {
+      tooltipText = "Drag to change movement speed and length";
+    } else if (keyIsDown(SHIFT)) {
+      tooltipText = "Drag to change size and rotation";
+    } else {
+      tooltipText = "";
+    }
+  } else if (dist(mouseX, mouseY, visCx, visCy) < 100) {
+    tooltipText = "Output";
+  } else {
+    tooltipText = "";
+  }
+
   // mouse drag behavior visual feedback
   push();
   translate(buttonPanelPos.x, buttonPanelPos.y + 140);
@@ -758,10 +784,23 @@ function draw() {
 
   dragBehaviorControls.forEach(({ renderLogo, getIsSelected, label }, i) => {
     const isSelected = getIsSelected();
+    const y = buttonPanelPos.y + 140;
     const w = (buttonPanelWidth / 3) * 0.938;
     const padding = w * 0.05;
+    const x = i * (w + padding) + i * padding;
+    const isHovering =
+      mouseX > buttonPanelPos.x &&
+      mouseX - (buttonPanelPos.x + x) < w - padding &&
+      mouseY - y < w - padding &&
+      mouseY > buttonPanelPos.y + 140;
+
+    if (isHovering) {
+      tooltipText =
+        "Hold ALT/OPTION or SHIFT on your keyboard to change what happens when you drag a shape";
+    }
+
     push();
-    translate(i * (w + padding) + i * padding, 0);
+    translate(x, 0);
     fill(0, 0, 10, isSelected ? 0.5 : 0.2);
     strokeWeight(1);
     stroke(0, 0, 80, isSelected ? 0.9 : 0.1);
@@ -779,7 +818,7 @@ function draw() {
       strokeWeight(1);
 
       rectMode(CORNER);
-      rect(0, 0, 50, -20);
+      rect(0, 0, label.length * 10, -20);
       fill(0, 0, 10, 1);
       noStroke();
       text(label, 5, -6);
@@ -805,12 +844,10 @@ function draw() {
   });
   pop();
 
-  if (hoveredShapeIndex > -1) {
-    if (keyIsDown(ALT)) {
-      showToolTip("Drag to change movement speed and length");
-    } else if (keyIsDown(SHIFT)) {
-      showToolTip("Drag to change size and rotation");
-    }
+  if (tooltipText) {
+    showToolTip(tooltipText);
+  } else {
+    hideToolTip();
   }
 }
 

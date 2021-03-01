@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: "Roboto Mono" sans-serif;
+  font-family: "Roboto Mono", sans-serif;
   font-display: swap;
 }
 
@@ -41,4 +41,19 @@ button:hover {
 
 button:active {
   transform: scale(0.95, 0.95) translate(1px, -1px);
+}
+
+.tooltip {
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2px 4px;
+  position: absolute;
+  max-width: 260px;
+  border-radius: 2px;
+  display: none;
+  font-size: 0.8em;
+}
+
+.tooltip.is-visible {
+  display: inline;
 }
