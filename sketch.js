@@ -4,6 +4,7 @@ const NUM_HARMONICS = 8;
 const X_PAD = 36;
 const SAMPLE_RATE = Math.pow(2, 12);
 const H_OFFSET = 10;
+const PLAYABLE_NOTES = "ASDFGHJK";
 const COLORS = {
   CIRCLE: [80, 40, 50],
   SQUARE: [10, 50, 50],
@@ -24,13 +25,20 @@ let hoveredShapeIndex = -1;
 let hoveredShapeButton = null;
 let activeNoteIndex = 1;
 
+let buttonPanelPos;
+let buttonPanelWidth;
+
 const oscillatorShapes = [];
 
 const musicScale = new teoria.note("A1").scale("major");
 
-const buttonClick = new Tone.Player("./fx_click.wav").toMaster();
+const buttonClick = new Tone.Player("./fx_click.wav").toDestination();
 buttonClick.playbackRate = 0.4;
-buttonClick.volume.value = -15;
+buttonClick.volume.value = -10;
+const uiBlip = new Tone.Player("./blip_hi.wav");
+uiBlip.connect(new Tone.Filter({ type: "lowpass", frequency: 1000 }));
+uiBlip.connect(Tone.Destination);
+uiBlip.volume.value = -20;
 
 const amplitudeEnvelope = new Tone.AmplitudeEnvelope({
   attack: 0.01,
@@ -100,6 +108,18 @@ const setActiveShape = (newActiveShape) => {
 
 const getMousePos = () =>
   createVector(constrain(mouseX, X_PAD, width - X_PAD), mouseY);
+
+const showToolTip = (label) => {
+  push();
+  translate(mouseX, mouseY);
+  fill(0, 0, 10, 0.8);
+  rectMode(CORNER);
+  noStroke();
+  rect(15, -10, label.length * 7.4, 15);
+  fill(0, 0, 100, 1);
+  text(label, 15, 0);
+  pop();
+};
 
 const drawCrosshair = () => {
   strokeWeight(2);
@@ -226,13 +246,15 @@ function OscillatorShape({
   let count = 0;
   let size = initialSize;
   let isHovered = false;
-  let xAmplitude = initialDepth;
+  let xAmplitude = initialDepth < 5 ? 0 : initialDepth;
   let dragStartPos = pos;
 
-  const osc = new Tone.Oscillator({
-    type: waveType,
-    volume: -Infinity,
-  });
+  const oscs = [
+    new Tone.Oscillator({
+      type: waveType,
+      volume: -Infinity,
+    }),
+  ];
 
   const vibrato = new Tone.Vibrato({
     frequency: initialRate,
@@ -245,14 +267,16 @@ function OscillatorShape({
   this.setNote = (note) => {
     this.note = note;
     const fq = this.note.fq();
-    osc.set({ frequency: fq * (NUM_HARMONICS - this.harmonicIndex + 1) });
+    oscs.forEach((osc) =>
+      osc.set({ frequency: fq * (NUM_HARMONICS - this.harmonicIndex + 1) })
+    );
   };
 
   this.setNote(this.note);
 
   const filter = new Tone.Filter({ type: "lowpass", frequency: 15000 });
   const autoPan = new Tone.AutoPanner({
-    frequency: initialRotation,
+    frequency: initialRotation < 0.5 ? 0 : initialRotation,
     wet: 1,
     depth: 0.8,
   }).start();
@@ -271,18 +295,21 @@ function OscillatorShape({
   };
 
   // let rotationAmount = 0;
-  osc.chain(vibrato, filter, autoPan, OUTPUT_NODE);
-  osc.start();
-  osc.volume.rampTo(getVolume(), 0.1);
+  oscs.forEach((osc) => osc.chain(vibrato, filter, autoPan, OUTPUT_NODE));
+  oscs.forEach((osc) => osc.start());
+  oscs.forEach((osc) => osc.volume.rampTo(getVolume(), 0.3));
   setXPos(xPos);
 
   this.destroy = () => {
-    osc.stop();
-    osc.disconnect();
-    vibrato.dispose();
-    autoPan.dispose();
-    filter.dispose();
-    osc.dispose();
+    oscs.forEach((osc) => osc.volume.rampTo(-Infinity, 0.5));
+    setTimeout(() => {
+      oscs.forEach((osc) => osc.stop());
+      oscs.forEach((osc) => osc.disconnect());
+      vibrato.dispose();
+      autoPan.dispose();
+      filter.dispose();
+      oscs.forEach((osc) => osc.dispose());
+    }, 500);
   };
 
   this.getIsHovered = () => {
@@ -315,7 +342,7 @@ function OscillatorShape({
     if (keyIsDown(SHIFT)) {
       size = dragStartSize + deltaY * 100;
       size = constrain(size, MIN_SHAPE_SIZE, MAX_SHAPE_SIZE);
-      osc.volume.rampTo(getVolume(), 0.1);
+      oscs.forEach((osc) => osc.volume.rampTo(getVolume(), 0.1));
       let rotationAmount = dragStartRotation + deltaX / 100;
 
       rotationAmount = constrain(rotationAmount, -PI, PI);
@@ -445,9 +472,28 @@ const drawBackground = (ctx) => {
   ctx.rectMode(CORNER);
   ctx.rect(0, inputHeight, width, height);
 
+  // ctx.push();
+  // ctx.stroke(0, 0, 14, 1);
+  // ctx.fill(0, 0, 14, 1);
+  // ctx.strokeWeight(20);
+  // ctx.rectMode(CORNERS);
+  // ctx.rect(
+  //   buttonPanelPos.x,
+  //   buttonPanelPos.y,
+  //   buttonPanelPos.x + buttonPanelWidth,
+  //   height - X_PAD / 2 - 20
+  // );
+  // ctx.rect(
+  //   X_PAD / 2,
+  //   buttonPanelPos.y,
+  //   X_PAD / 2 + buttonPanelPos.x - 45,
+  //   height - X_PAD / 2 - 20
+  // );
+  // ctx.pop();
+
   // visualizer background
   ctx.push();
-  ctx.translate(width * 0.22, inputHeight + (height - inputHeight) / 2 + 20);
+  ctx.translate(width * 0.22, inputHeight + (height - inputHeight) / 2 + 10);
   ctx.fill(0, 0, 0, 0.2);
   ctx.noStroke();
   ctx.ellipse(0, 0, 240);
@@ -508,6 +554,8 @@ function setup() {
   canv.parent("sketch");
   inputHeight = height * (2 / 3);
   sectionHeight = (inputHeight * 0.85) / NUM_HARMONICS;
+  buttonPanelPos = createVector(width * 0.45, inputHeight + 20);
+  buttonPanelWidth = width - buttonPanelPos.x - X_PAD / 2;
   colorMode(HSL);
   textFont("Roboto Mono");
 
@@ -523,11 +571,12 @@ function setup() {
     buttonClick.start();
     oscillatorShapes.length = 0;
   };
-  resetButton.position(X_PAD / 2, inputHeight + 20);
+  resetButton.position(X_PAD / 2, inputHeight + 16);
   resetButton.parent("#sketch");
   resetButton.mouseClicked(clearAllShapes);
+
   const randomizeButton = createButton("Randomize");
-  randomizeButton.position(X_PAD / 2 + 55, inputHeight + 20);
+  randomizeButton.position(X_PAD / 2 + 55, inputHeight + 16);
   randomizeButton.parent("#sketch");
   randomizeButton.mouseClicked(() => {
     clearAllShapes();
@@ -537,24 +586,30 @@ function setup() {
     oscTypes.sawtooth.color = [random(0, 360), random(40, 55), 50];
     const n = floor(random(2, 15));
     for (let i = 0; i < n; i++) {
-      oscillatorShapes.push(
-        new OscillatorShape({
-          harmonicIndex: ceil(random(NUM_HARMONICS)),
-          xPos: random(X_PAD, width - X_PAD),
-          initialSize: random(MIN_SHAPE_SIZE, MAX_SHAPE_SIZE),
-          type: Object.keys(oscTypes)[
-            floor(random(Object.keys(oscTypes).length))
-          ],
-          initialRotation: random(0, 1),
-          initialRate: random(0, 4),
-          initialDepth: random(0, 100),
-        })
-      );
+      const delay = random(0, i * 50);
+
+      setTimeout(() => {
+        uiBlip.playbackRate = map(i, 0, n, 0.5, 2);
+        uiBlip.start();
+        oscillatorShapes.push(
+          new OscillatorShape({
+            harmonicIndex: ceil(random(NUM_HARMONICS)),
+            xPos: random(X_PAD, width - X_PAD),
+            initialSize: random(MIN_SHAPE_SIZE, MAX_SHAPE_SIZE),
+            type: Object.keys(oscTypes)[
+              floor(random(Object.keys(oscTypes).length))
+            ],
+            initialRotation: random(0, 1),
+            initialRate: random(0, 4),
+            initialDepth: random(0, 100),
+          })
+        );
+      }, delay);
     }
   });
 
   // wait for mouse movements to start loop
-  noLoop();
+  // noLoop();
 }
 
 function draw() {
@@ -604,6 +659,12 @@ function draw() {
   stroke(0, 0, 16, 1);
   noFill();
   rect(width / 2, height / 2, width, height);
+  fill(0, 0, 16, 1);
+  push();
+  rectMode(CORNER);
+  noStroke();
+  rect(0, inputHeight, width, 55);
+  pop();
 
   // strokeWeight(2);
   // stroke(0, 0, 10, 1);
@@ -614,10 +675,11 @@ function draw() {
 
   // visualizer
   push();
-  translate(width * 0.22, inputHeight + (height - inputHeight) / 2 + 20) + 20;
+  translate(width * 0.22, inputHeight + (height - inputHeight) / 2 + 10);
   strokeWeight(1);
 
-  stroke(160, 30, 100, 0.2);
+  stroke(0, 0, 100, 0.2);
+  // stroke(...oscTypes[activeShape].color, 0.2);
   noFill();
   beginShape();
 
@@ -626,7 +688,7 @@ function draw() {
   let theta = 0;
 
   for (let i = 0; i < SAMPLE_RATE; i++) {
-    let val = map(waveform[i], -1, 1, 0, 100);
+    let val = map(waveform[i], -1, 1, -150, 150);
     vertex(cos(theta) * val, sin(theta) * val);
     theta += 360 / SAMPLE_RATE;
   }
@@ -638,22 +700,31 @@ function draw() {
 
   // Shape buttons
   let someButtonIsHovered = false;
-  Object.keys(oscTypes).forEach((key, i) => {
+
+  push();
+
+  Object.keys(oscTypes).forEach((key, i, keys) => {
     const { renderShape, color } = oscTypes[key];
-    const x = width / 2;
-    const y = inputHeight + 70;
-    const cx = x + i * 108;
-    const w = 90;
-    const isHovering = abs(mouseX - cx) < w / 2 && abs(mouseY - y) < w / 2;
+    const w = (buttonPanelWidth / keys.length) * 0.93;
+    const padding = w * 0.1;
+    const x = i * (w + padding);
+    const absX = x + buttonPanelPos.x;
+
+    const cx = absX + w / 2;
+    const cy = buttonPanelPos.y + w / 2;
+    const isHovering = abs(mouseX - cx) < w / 2 && abs(mouseY - cy) < w / 2;
+
     const isActive = isHovering || activeShape === key;
+
     if (isHovering) {
       someButtonIsHovered = true;
       hoveredShapeButton = key;
       cursor("pointer");
     }
+
     push();
-    translate(cx, y);
-    rectMode(CENTER);
+    translate(buttonPanelPos.x + x, buttonPanelPos.y);
+    rectMode(CORNER);
     const [h, s, l] = color;
     const borderL = isActive
       ? map(sin(frameCount / 10), -1, 1, l * 1, l * 1.3)
@@ -665,11 +736,15 @@ function draw() {
     fill(...color, isActive ? 1 : 0.5);
     stroke(...color, isActive ? 1 : 0.5);
     strokeWeight(2);
+    push();
+    translate(w / 2, w / 2);
     renderShape(700, false);
+    pop();
     strokeWeight(0);
-    text(i + 1, -40, -31);
+    text(i + 1, 15, 18);
     pop();
   });
+  pop();
 
   if (!someButtonIsHovered) {
     hoveredShapeButton = null;
@@ -677,34 +752,25 @@ function draw() {
 
   // mouse drag behavior visual feedback
   push();
-  translate(width / 2, inputHeight + 230);
+  translate(buttonPanelPos.x, buttonPanelPos.y + 140);
   fill(0, 0, 100, 0.9);
   noStroke();
-  // let dragBehaviorLabel = "Move shapes [⬌ Filter] [⬍ Harmonic]";
-  // if (keyIsDown(ALT)) {
-  //   dragBehaviorLabel = "Vibrato [⬌ Width/Depth] [⬍ Divisions/Rate]";
-  // }
-  // if (keyIsDown(SHIFT)) {
-  //   dragBehaviorLabel = "[⬍ Size/Volume] [⬌ Rotation/Pan]";
-  // }
-  // text(`Drag Behavior: ${dragBehaviorLabel}`, -45, -75);
-  // text(
-  //   "Hold SHIFT or ALT to change what happens when dragging a shape",
-  //   -45,
-  //   -75
-  // );
+
   dragBehaviorControls.forEach(({ renderLogo, getIsSelected, label }, i) => {
     const isSelected = getIsSelected();
-    const rectWidth = 130;
+    const w = (buttonPanelWidth / 3) * 0.938;
+    const padding = w * 0.05;
     push();
-    translate(i * rectWidth + 20 + i * 11, 0);
+    translate(i * (w + padding) + i * padding, 0);
     fill(0, 0, 10, isSelected ? 0.5 : 0.2);
     strokeWeight(1);
     stroke(0, 0, 80, isSelected ? 0.9 : 0.1);
-    rect(0, 0, rectWidth);
+    rectMode(CORNER);
+    rect(0, 0, w);
     push();
     fill(0, 0, isSelected ? 100 : 40, 1);
     stroke(0, 0, isSelected ? 100 : 40, 1);
+    translate(w / 2, w / 2);
     renderLogo();
     pop();
     if (label) {
@@ -713,40 +779,43 @@ function draw() {
       strokeWeight(1);
 
       rectMode(CORNER);
-      rect(-65, -85, 50, 20);
+      rect(0, 0, 50, -20);
       fill(0, 0, 10, 1);
       noStroke();
-      text(label, -58, -71);
+      text(label, 5, -6);
     }
     pop();
   });
 
   pop();
-  if (hoveredShapeIndex > -1) {
-    console.log("is hovered");
-    push();
-    translate(mouseX, mouseY);
-    fill(0, 0, 10, 0.8);
-    let label = "";
-    if (keyIsDown(ALT)) {
-      label = "Drag to change movement speed and length";
-    } else if (keyIsDown(SHIFT)) {
-      label = "Drag to change size and rotation";
-    }
-    if (label) {
-      rectMode(CORNER);
-      noStroke();
-      rect(15, -10, label.length * 7.4, 15);
-      fill(0, 0, 100, 1);
-      text(label, 15, 0);
-    }
 
-    pop();
+  push();
+  // translate(0, 0);
+  PLAYABLE_NOTES.split("").forEach((l, i) => {
+    const isActive = i + 1 === activeNoteIndex;
+    const x = map(i, 0, PLAYABLE_NOTES.length, 0, width);
+    const y = height - 20;
+    const w = width / PLAYABLE_NOTES.length;
+    fill(0, 0, isActive ? 80 : 12, 1);
+    noStroke();
+    rectMode(CORNER);
+    rect(x, y, w, y + 20);
+    fill(0, 0, isActive ? 10 : 40, 1);
+    text(l, x + 10, y + 14);
+  });
+  pop();
+
+  if (hoveredShapeIndex > -1) {
+    if (keyIsDown(ALT)) {
+      showToolTip("Drag to change movement speed and length");
+    } else if (keyIsDown(SHIFT)) {
+      showToolTip("Drag to change size and rotation");
+    }
   }
 }
 
 function mouseMoved() {
-  loop();
+  // loop();
   hoveredShapeIndex = -1;
   oscillatorShapes.forEach((shape, i) => {
     if (shape.getIsHovered()) {
@@ -784,6 +853,8 @@ function mousePressed() {
   }
 
   if (hoveredHarmonic > -1) {
+    uiBlip.playbackRate = map(hoveredHarmonic, 0, NUM_HARMONICS, 2, 0.5);
+    uiBlip.start();
     oscillatorShapes.push(
       new OscillatorShape({
         harmonicIndex: hoveredHarmonic,
@@ -813,8 +884,8 @@ function keyPressed() {
     setActiveShape("sawtooth");
   }
 
-  "asdfghjkl".split("").forEach((l, i) => {
-    if (key === l) {
+  PLAYABLE_NOTES.split("").forEach((l, i) => {
+    if (key.toLowerCase() === l.toLowerCase()) {
       activeNoteIndex = i + 1;
       oscillatorShapes.forEach(({ setNote }) => {
         setNote(musicScale.get(activeNoteIndex));
