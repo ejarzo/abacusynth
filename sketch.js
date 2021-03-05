@@ -1,11 +1,11 @@
-const MAX_SHAPE_SIZE = 15000;
-const MIN_SHAPE_SIZE = 100;
+const MAX_SHAPE_AREA = 15000;
+const MIN_SHAPE_AREA = 100;
 const NUM_HARMONICS = 8;
 const X_PAD = 36;
 const SAMPLE_RATE = Math.pow(2, 12);
 const H_OFFSET = 10;
-const PLAYABLE_NOTES = "ASDFGHJK";
-const COLORS = {
+const PLAYABLE_KEYS = "ASDFGHJK";
+const DEFAULT_COLORS = {
   CIRCLE: [80, 40, 50],
   SQUARE: [10, 50, 50],
   TRIANGLE: [50, 60, 50],
@@ -17,7 +17,7 @@ let inputHeight;
 let sectionHeight;
 let hoveredHarmonic = -1;
 let activeShape = "circle";
-let activeSize = 5000;
+let activeSize = 0.4;
 let backgroundGraphics;
 let someShapeIsHovered = false;
 let activeChordRoot = 1;
@@ -35,14 +35,18 @@ const oscillatorShapes = [];
 
 const musicScale = new teoria.note("A1").scale("major");
 
+// Button sound
 const buttonClick = new Tone.Player("./fx_click.wav").toDestination();
 buttonClick.playbackRate = 0.4;
 buttonClick.volume.value = -10;
+
+// Sound when placing a shape
 const uiBlip = new Tone.Player("./blip_hi.wav");
 uiBlip.connect(new Tone.Filter({ type: "lowpass", frequency: 1000 }));
 uiBlip.connect(Tone.Destination);
 uiBlip.volume.value = -20;
 
+// Output envelope
 const amplitudeEnvelope = new Tone.AmplitudeEnvelope({
   attack: 0.01,
   decay: 0.5,
@@ -126,7 +130,6 @@ hideToolTip = () => {
 
 const drawCrosshair = () => {
   strokeWeight(2);
-  // stroke(0, 0, 100, 0.9);
   line(-15, 0, 15, 0);
   line(0, -15, 0, 15);
   for (let theta = 0; theta < TAU; theta += TAU / 4) {
@@ -141,7 +144,7 @@ const drawCrosshair = () => {
 
 const oscTypes = {
   circle: {
-    color: COLORS.CIRCLE,
+    color: DEFAULT_COLORS.CIRCLE,
     waveType: "sine",
     renderShape: (size, useCentroid, rotation) => {
       push();
@@ -151,17 +154,15 @@ const oscTypes = {
       const r = Math.sqrt(size / PI);
       ellipse(0, 0, r * 2, r * 2);
       line(0, 0, 0, -r);
-      // strokeWeight(r / 5);
-      // ellipse(0, -r * 0.7, 1, 1);
       pop();
     },
   },
   square: {
-    color: COLORS.SQUARE,
+    color: DEFAULT_COLORS.SQUARE,
     waveType: "square",
-    renderShape: (size, useCentroid, rotation) => {
+    renderShape: (area, useCentroid, rotation) => {
       push();
-      const sideL = sqrt(size);
+      const sideL = sqrt(area);
       rectMode(CENTER);
       if (rotation) {
         rotate(rotation);
@@ -171,12 +172,12 @@ const oscTypes = {
     },
   },
   triangle: {
-    color: COLORS.TRIANGLE,
+    color: DEFAULT_COLORS.TRIANGLE,
     waveType: "triangle",
-    renderShape: (size, useCentroid = true, rotation) => {
+    renderShape: (area, useCentroid = true, rotation) => {
       // equilateral triangle
       push();
-      const sideL = Math.sqrt((size * 4) / Math.sqrt(3));
+      const sideL = Math.sqrt((area * 4) / Math.sqrt(3));
       const h = (-sideL * Math.sqrt(3)) / 2;
 
       if (rotation) {
@@ -199,11 +200,11 @@ const oscTypes = {
     },
   },
   sawtooth: {
-    color: COLORS.SAWTOOTH,
+    color: DEFAULT_COLORS.SAWTOOTH,
     waveType: "sawtooth",
-    renderShape: (size, useCentroid = true, rotation) => {
+    renderShape: (area, useCentroid = true, rotation) => {
       push();
-      const baseL = Math.sqrt(size * (2 * (4 / 3)));
+      const baseL = Math.sqrt(area * (2 * (4 / 3)));
       const h = baseL * 0.75;
 
       if (rotation) {
@@ -230,29 +231,55 @@ const oscTypes = {
  ================================================
 */
 function OscillatorShape({
-  harmonicIndex,
-  xPos,
-  initialSize,
-  type,
-  initialDepth = 0,
-  initialRate = 0,
-  initialRotation = 0,
+  initialHarmonicIndex, // [0,NUM_HARMONICS]
+  xPos, // [0,1]
+  type, // ['sine', 'square', 'triangle', 'sawtooth']
+  initialSize, // [0,1]
+  initialMovementDepth = 0, // [0,1]
+  initialMovementRate = 0, // [0,1]
+  initialRotation = 0, // [0,1]
 }) {
-  const { renderShape, color, waveType } = oscTypes[type];
-  const yPos = sectionHeight * harmonicIndex + H_OFFSET;
-  const pos = createVector(xPos, yPos);
   const startMillis = millis();
+  const { renderShape, color, waveType } = oscTypes[type];
 
-  this.harmonicIndex = harmonicIndex;
+  // Converters between normal ranges and actual values
+  const sizeToVolume = () => map(size, 0, 1, -30, 0);
+  const sizeToSurfaceArea = (size) =>
+    map(size, 0, 1, MIN_SHAPE_AREA, MAX_SHAPE_AREA);
+
+  const harmonicIndexToYPos = (idx) => sectionHeight * idx + H_OFFSET;
+
+  const movementDepthToXAmplitude = (depth) =>
+    map(depth, 0, 1, 0, width / 2 - X_PAD);
+  const movementRateToFrequency = (rate) => map(rate, 0, 1, 0.5, 10);
+  const rotationAmountToFrequency = (rotation) => map(rotation, 0, 1, 0, 10);
+  const rotationAmountToTheta = (rotation) => map(rotation, 0, 1, 0, PI);
+
+  let harmonicIndex = initialHarmonicIndex;
+
+  const pos = createVector(xPos, harmonicIndexToYPos(harmonicIndex));
+
   this.note = musicScale.get(activeNoteIndex);
 
   let count = 0;
   let size = initialSize;
   let isHovered = false;
-  let xAmplitude = initialDepth < 5 ? 0 : initialDepth;
+  let movementDepth = initialMovementDepth < 0.2 ? 0 : initialMovementDepth;
+  let movementRate = initialMovementRate;
+  let rotationAmount = initialRotation < 0.2 ? 0 : initialRotation;
   let dragStartPos = pos;
 
+  // this.getState = () => ({
+  //   pos: { x: pos.x, y: pos.y },
+  //   size,
+  //   isHovered,
+  // });
+
   const oscs = [
+    new Tone.Oscillator({
+      type: waveType,
+      volume: -Infinity,
+    }),
     new Tone.Oscillator({
       type: waveType,
       volume: -Infinity,
@@ -260,47 +287,47 @@ function OscillatorShape({
   ];
 
   const vibrato = new Tone.Vibrato({
-    frequency: initialRate,
-    depth: 0,
+    frequency: movementRateToFrequency(movementRate),
+    depth: movementDepth,
     wet: 1,
   });
-
-  vibrato.depth.value = constrain(map(xAmplitude, 0, width / 2, 0, 1), 0, 1);
 
   this.setNote = (note) => {
     this.note = note;
     const fq = this.note.fq();
     oscs.forEach((osc) =>
-      osc.set({ frequency: fq * (NUM_HARMONICS - this.harmonicIndex + 1) })
+      osc.set({ frequency: fq * (NUM_HARMONICS - harmonicIndex + 1) })
     );
+    // oscs[0].set({ frequency: fq * (NUM_HARMONICS - harmonicIndex + 1) });
+    // oscs[1].set({
+    //   frequency: musicScale.get(1).fq() * (NUM_HARMONICS - harmonicIndex + 1),
+    // });
   };
 
   this.setNote(this.note);
 
   const filter = new Tone.Filter({ type: "lowpass", frequency: 15000 });
   const autoPan = new Tone.AutoPanner({
-    frequency: initialRotation < 0.5 ? 0 : initialRotation,
+    frequency: rotationAmountToFrequency(rotationAmount),
     wet: 1,
     depth: 0.8,
   }).start();
-
-  const getVolume = () => map(size, MIN_SHAPE_SIZE, MAX_SHAPE_SIZE, -30, 0);
 
   const setXPos = (x) => {
     pos.x = x;
     filter.frequency.rampTo(pow(2, map(pos.x, 0, width, 6, 12)), 0.1);
   };
 
-  const setHarmonic = (harmonicIndex) => {
-    this.harmonicIndex = harmonicIndex;
-    pos.y = sectionHeight * harmonicIndex + H_OFFSET;
+  const setHarmonic = (newIndex) => {
+    harmonicIndex = newIndex;
+    pos.y = harmonicIndexToYPos(harmonicIndex);
     this.setNote(this.note);
   };
 
   // let rotationAmount = 0;
   oscs.forEach((osc) => osc.chain(vibrato, filter, autoPan, OUTPUT_NODE));
   oscs.forEach((osc) => osc.start());
-  oscs.forEach((osc) => osc.volume.rampTo(getVolume(), 0.3));
+  oscs.forEach((osc) => osc.volume.rampTo(sizeToVolume(), 0.3));
   setXPos(xPos);
 
   this.destroy = () => {
@@ -316,7 +343,8 @@ function OscillatorShape({
   };
 
   this.getIsHovered = () => {
-    let hoverRadius = Math.sqrt(size / Math.PI) * 1.5;
+    const sa = sizeToSurfaceArea(size);
+    let hoverRadius = Math.sqrt(sa / Math.PI) * 1.5;
     hoverRadius = max(10, hoverRadius);
     const mousePos = getMousePos();
     return dist(mousePos.x, mousePos.y, pos.x, pos.y) < hoverRadius;
@@ -333,34 +361,33 @@ function OscillatorShape({
   this.handleDragStart = (position) => {
     dragStartPos = position;
     dragStartSize = size;
-    dragStartXAmplitude = xAmplitude;
-    dragStartVibratoFreq = vibrato.frequency.value;
-    dragStartRotation = map(autoPan.frequency.value, 0, 2, -PI, PI);
+    dragStartMovementDepth = movementDepth;
+    dragStartMovementRate = movementRate;
+    dragStartRotation = rotationAmount;
   };
 
   this.handleDrag = () => {
     const mousePos = getMousePos();
     const deltaX = mousePos.x - dragStartPos.x;
     const deltaY = dragStartPos.y - mousePos.y;
+
     if (keyIsDown(SHIFT)) {
-      size = dragStartSize + deltaY * 100;
-      size = constrain(size, MIN_SHAPE_SIZE, MAX_SHAPE_SIZE);
-      oscs.forEach((osc) => osc.volume.rampTo(getVolume(), 0.1));
-      let rotationAmount = dragStartRotation + deltaX / 100;
-
-      rotationAmount = constrain(rotationAmount, -PI, PI);
-
-      if (PI + rotationAmount < 0.4) {
-        rotationAmount = -PI;
+      size = dragStartSize + deltaY / 100;
+      size = constrain(size, 0, 1);
+      oscs.forEach((osc) => osc.volume.rampTo(sizeToVolume(), 0.1));
+      rotationAmount = dragStartRotation + deltaX / 400;
+      rotationAmount = constrain(rotationAmount, 0, 1);
+      if (rotationAmount < 0.02) {
+        rotationAmount = 0;
       }
-
-      autoPan.frequency.value = map(rotationAmount, -PI, PI, 0, 2);
+      autoPan.frequency.value = rotationAmountToFrequency(rotationAmount);
     } else if (keyIsDown(ALT)) {
-      xAmplitude = dragStartXAmplitude + deltaX;
-      xAmplitude = constrain(xAmplitude, 0, width / 2);
-      const newFreq = dragStartVibratoFreq + deltaY / 15;
-      vibrato.frequency.value = constrain(newFreq, 0.5, 10);
-      vibrato.depth.value = map(xAmplitude, 0, width / 2, 0, 1);
+      movementDepth = dragStartMovementDepth + deltaX / (width / 2);
+      movementRate = dragStartMovementRate + deltaY / 100;
+      movementDepth = constrain(movementDepth, 0, 1);
+      movementRate = constrain(movementRate, 0, 1);
+      vibrato.frequency.value = movementRateToFrequency(movementRate);
+      vibrato.depth.value = movementDepth;
     } else {
       setXPos(mousePos.x);
       if (hoveredHarmonic > -1) {
@@ -382,7 +409,7 @@ function OscillatorShape({
 
     strokeWeight(2);
 
-    // ghost dot
+    // dotted outline dot
     push();
 
     translate(pos.x, pos.y);
@@ -394,36 +421,38 @@ function OscillatorShape({
       strokeWeight(map(sin(count / 5), -1, 1, 3, 8));
     }
     fill(h, sat, light, 0);
-    const staticRotation = map(autoPan.frequency.value, 0, 2, 0, PI);
-    renderShape(size, true, staticRotation);
-    const r = Math.sqrt(size / PI);
+
+    rotationTheta = rotationAmountToTheta(rotationAmount);
+
+    const sa = sizeToSurfaceArea(size);
+    const r = Math.sqrt(sa / PI);
+
+    renderShape(sa, true, rotationTheta);
     line(0, 0, 0, -r);
     push();
-    rotate(staticRotation);
+    rotate(rotationTheta);
     line(0, 0, 0, -r);
     pop();
     fill(h, sat, light, 0.5);
 
-    arc(0, 0, r, r, -PI / 2, -PI / 2 + staticRotation);
-    // renderShape(size / rotationAmount + 1);
+    arc(0, 0, r, r, -PI / 2, -PI / 2 + rotationTheta);
     canv.drawingContext.setLineDash([]);
     pop();
 
-    const fq = vibrato.frequency.value;
-    const p = fq;
-
     // moving shape
+    const fq = vibrato.frequency.value;
+    const xAmplitude = movementDepthToXAmplitude(vibrato.depth.value);
     const currX =
-      pos.x + sin(((millis() - startMillis) / 1000) * p) * xAmplitude;
+      pos.x + sin(((millis() - startMillis) / 1000) * fq) * xAmplitude;
     push();
 
     translate(currX, pos.y);
     stroke(h, sat, light * 1.2);
     fill(h, sat, light, isHovered ? 0.5 : 0.9);
-    const rotation =
-      (autoPan.frequency.value * ((millis() - startMillis) * TAU)) / 1000;
-    // const rotation = count * autoPan.frequency.value;
-    renderShape(size, true, rotation);
+
+    const rotation = (rotationTheta * ((millis() - startMillis) * TAU)) / 1000;
+
+    renderShape(sa, true, rotation / 2);
     pop();
 
     // colored bar
@@ -436,15 +465,15 @@ function OscillatorShape({
     if (isHovered && keyIsDown(ALT)) {
       scale(1, map(sin(count / 5), -1, 1, 1.1, 2));
     }
-    rect(0, 0, xAmplitude * 2, this.harmonicIndex);
-    rect(xAmplitude, 0, 4, this.harmonicIndex + 10);
-    rect(-xAmplitude, 0, 4, this.harmonicIndex + 10);
+    rect(0, 0, xAmplitude * 2, harmonicIndex);
+    rect(xAmplitude, 0, 4, harmonicIndex + 10);
+    rect(-xAmplitude, 0, 4, harmonicIndex + 10);
     for (let i = 0; i < xAmplitude; i += xAmplitude / (fq / 2)) {
       fill(h, sat, light);
       noStroke();
       rectMode(CENTER);
-      rect(i, 0, 2, this.harmonicIndex + 6);
-      rect(-i, 0, 2, this.harmonicIndex + 6);
+      rect(i, 0, 2, harmonicIndex + 6);
+      rect(-i, 0, 2, harmonicIndex + 6);
     }
     pop();
 
@@ -600,15 +629,15 @@ function setup() {
         uiBlip.start();
         oscillatorShapes.push(
           new OscillatorShape({
-            harmonicIndex: ceil(random(NUM_HARMONICS)),
+            initialHarmonicIndex: ceil(random(NUM_HARMONICS)),
             xPos: random(X_PAD, width - X_PAD),
-            initialSize: random(MIN_SHAPE_SIZE, MAX_SHAPE_SIZE),
+            initialSize: random(0, 1),
             type: Object.keys(oscTypes)[
               floor(random(Object.keys(oscTypes).length))
             ],
-            initialRotation: random(0, 1),
-            initialRate: random(0, 4),
-            initialDepth: random(0, 100),
+            initialRotation: random(0, 0.5),
+            initialMovementRate: random(0, 0.5),
+            initialMovementDepth: random(0, 0.5),
           })
         );
       }, delay);
@@ -655,7 +684,7 @@ function draw() {
     const light = map(mousePos.x, 0, width, l - 30, l + 15);
     stroke(h, s, light * 1.2);
     fill(h, s, light, 0.9);
-    renderShape(activeSize);
+    renderShape(map(activeSize, 0, 1, MIN_SHAPE_AREA, MAX_SHAPE_AREA));
     strokeWeight(8);
     ellipse(0, 0, 1, 1);
     pop();
@@ -696,11 +725,10 @@ function draw() {
   beginShape();
 
   let waveform = analyzer.getValue();
-  // console.log()
   let theta = 0;
 
   for (let i = 0; i < SAMPLE_RATE; i++) {
-    let val = map(waveform[i], -1, 1, -150, 150);
+    let val = map(waveform[i], -1, 1, -130, 130);
     vertex(cos(theta) * val, sin(theta) * val);
     theta += 360 / SAMPLE_RATE;
   }
@@ -830,11 +858,11 @@ function draw() {
 
   push();
   // translate(0, 0);
-  PLAYABLE_NOTES.split("").forEach((l, i) => {
+  PLAYABLE_KEYS.split("").forEach((l, i) => {
     const isActive = i + 1 === activeNoteIndex;
-    const x = map(i, 0, PLAYABLE_NOTES.length, 0, width);
+    const x = map(i, 0, PLAYABLE_KEYS.length, 0, width);
     const y = height - 20;
-    const w = width / PLAYABLE_NOTES.length;
+    const w = width / PLAYABLE_KEYS.length;
     fill(0, 0, isActive ? 80 : 12, 1);
     noStroke();
     rectMode(CORNER);
@@ -884,8 +912,9 @@ function mouseDragged() {
 }
 
 function mousePressed() {
+  const mousePos = getMousePos();
   if (hoveredShapeIndex > -1) {
-    oscillatorShapes[hoveredShapeIndex].handleDragStart(getMousePos());
+    oscillatorShapes[hoveredShapeIndex].handleDragStart(mousePos);
     return;
   }
 
@@ -894,8 +923,8 @@ function mousePressed() {
     uiBlip.start();
     oscillatorShapes.push(
       new OscillatorShape({
-        harmonicIndex: hoveredHarmonic,
-        xPos: getMousePos().x,
+        initialHarmonicIndex: hoveredHarmonic,
+        xPos: mousePos.x,
         initialSize: activeSize,
         type: activeShape,
       })
@@ -921,7 +950,7 @@ function keyPressed() {
     setActiveShape("sawtooth");
   }
 
-  PLAYABLE_NOTES.split("").forEach((l, i) => {
+  PLAYABLE_KEYS.split("").forEach((l, i) => {
     if (key.toLowerCase() === l.toLowerCase()) {
       activeNoteIndex = i + 1;
       oscillatorShapes.forEach(({ setNote }) => {
