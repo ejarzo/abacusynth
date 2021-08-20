@@ -7,5 +7,49 @@
 
   <body>
     <h1>Abacusynth: Max for Live Plugin</h1>
+    <p>The Abacusynth is a polyphonic synthesizer plugin for Ableton Live.</p>
+
+    <h2>How it Works</h2>
+    <p>
+      A shape represents an oscillator. The rod it is on represents its
+      [harmonic](https://en.wikipedia.org/wiki/Harmonic), so shapes on the
+      lowest rod will oscillate at the fundamental frequency, those on the
+      second rod will oscillate at twice the fundamental, etc. The type of shape
+      (circle, square, equilateral triangle, right triangle) represents its
+      waveform (sine, square, triangle, sawtooth, respectively).
+      ![abacusynth-flow-diagram](abcs-diagram-2.png) In this diagram we see that
+      four shapes have been placed using the interface. This means that four
+      oscillators are active for each note played. The incoming frequency (the
+      blue note) is multiplied based on the rod that the shapes are located, and
+      the different types of shape produce different waveforms (as described
+      above). The shape-specific effects also modulate the sound here -- these
+      are described in detail below. The four signals are then combined and fed
+      through the [ADSR
+      envelope](<https://en.wikipedia.org/wiki/Envelope_(music)>), the
+      parameters of which are controlled through the interface, and then sent to
+      the output. This process happens for each "voice" of the synth. A voice
+      only operates on one fundamental frequency, so multiple voices are
+      required if we want to play more than one note at the same time -- this is
+      called polyphony. The gray "Voice 2" box is meant to represent the same
+      exact process as Voice 1, but for a different note.
+    </p>
+    <iframe
+      width="560"
+      height="315"
+      src="https://www.youtube.com/embed/b5UOwJX5gpk"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+    <iframe
+      width="560"
+      height="315"
+      src="https://www.youtube.com/embed/gvGFZSzaMGs"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
   </body>
 </html>
