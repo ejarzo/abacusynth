@@ -1,6 +1,6 @@
 # Abacusynth
 
-https://abacusynth.netlify.app/
+https://abacusynth.eliasjarzombek.com/
 
 ![osc-screenshot5](https://user-images.githubusercontent.com/9386882/109991490-5d98b080-7cd8-11eb-9fde-a393c7e45085.png)
 
