@@ -1,0 +1,14 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: #eee;
+}
+
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2em;
+}
