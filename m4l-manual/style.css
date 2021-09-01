@@ -12,3 +12,7 @@ main {
   margin: 0 auto;
   padding: 2em;
 }
+
+figure {
+  margin: 2em 0;
+}

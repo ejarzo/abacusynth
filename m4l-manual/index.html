@@ -1,83 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link href="style.css" rel="stylesheet" type="text/css" />
     <meta charset="utf-8" />
   </head>
 
   <body>
     <main>
-      <h1>Abacusynth: User Manual</h1>
+      <div>
+        <div>
+          <h1>Abacusynth: User Manual</h1>
+          <p>
+            This page details how to use the Abacusynth plugin by
+            <a target="blank" href="https://eliasjarzombek.com"
+              >Elias Jarzombek</a
+            >
+          </p>
+          <p>
+            Found a bug? Please send me an email at ejarz25 [at] pm [dot] me --
+            Thanks!
+          </p>
+        </div>
+
+        <div>
+          <figure>
+            <div><img src="abacusynth-window-screenshot.png" /></div>
+            <figcaption>
+              The plugin window -- place shapes on rods to build your synth
+              sound.
+            </figcaption>
+          </figure>
+          <figure>
+            <div><img src="abacusynth-plugin-screenshot.png" /></div>
+            <figcaption>
+              The plugin inside Ableton's device view -- "Auto" means the plugin
+              window will open when the track is selected, "Close" will keep it
+              closed when switching tracks, and "Open" will keep it open.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <h1>Overview</h1>
       <p>
         The Abacusynth is a polyphonic synthesizer plugin for Ableton Live. It
         is fundamentally an additive synthesizer, so you create the sound by
         adding and manipulating oscillators (as represented by shapes).
       </p>
 
-      <h2>Demo</h2>
-      <p>
-        Here is compilation of some sounds you can achieve with this plugin. For
-        more details on how to use the interface, see below.
-      </p>
-      <iframe
-        width="560"
-        height="315"
-        src="https://www.youtube.com/embed/b5UOwJX5gpk"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
-
       <h2>Controls</h2>
+      <p>
+        When the plugin loads the rods will be empty and it will not make any
+        sound. Build your synth sounds by placing shapes on the rods.
+      </p>
       <p>
         Each shape represents an oscillator. The rod it is on represents its
         <a href="https://en.wikipedia.org/wiki/Harmonic">harmonic</a>, so shapes
         on the lowest rod will oscillate at the fundamental frequency, those on
         the second rod will oscillate at twice the fundamental, etc. The type of
-        shape (circle, square, equilateral triangle, right triangle) represents
-        its waveform (sine, square, triangle, sawtooth, respectively).
-      </p>
-
-      <p>This video demos how to control the shapes.</p>
-      <p>
-        <iframe
-          width="560"
-          height="315"
-          src="https://www.youtube.com/embed/gvGFZSzaMGs"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
+        shape represents its waveform (circle -> sine wave, square -> square
+        wave, equilateral triangle -> triangle wave, right triangle -> sawtooth
+        wave).
       </p>
 
       <p>
         Each shape/oscillator also has several parameters that can be adjusted.
-        This is done by dragging the shape while holding modifier keys. In the
-        above video I demonstrate the modulations you can adjust on a shape.
+        <strong
+          >This is done by dragging the shape while holding modifier
+          keys.</strong
+        >
+      </p>
+      <p>This video demonstrates how to control the shapes.</p>
+      <p>
+        <iframe
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          frameborder="0"
+          height="315"
+          src="https://www.youtube.com/embed/gvGFZSzaMGs"
+          title="YouTube video player"
+          width="560"
+        ></iframe>
+      </p>
+
+      <p>
+        <strong>Moving</strong>
+        a shape left or right on the rod adjusts the cutoff frequency of a low
+        pass filter so shapes on the left sound "darker" and shapes on the right
+        sound "brighter". This effect reflected in the UI by displaying the rods
+        as a gradient from dark to light.
       </p>
       <p>
-        <strong>Moving</strong> a shape left or right on the rod adjusts the
-        cutoff frequency of a low pass filter so shapes on the left sound
-        "darker" and shapes on the right sound "brighter". This effect reflected
-        in the UI by displaying the rods as a gradient from dark to light.
+        <strong>SHIFT+Dragging</strong>
+        a shape lets you control its volume (dragging up/down), as represented
+        by size, and stereo pan effect (dragging left/right), as represented by
+        spin/rotation.
       </p>
       <p>
-        <strong>SHIFT+Dragging</strong> a shape lets you control its volume
-        (dragging up/down), as represented by size, and stereo pan effect
-        (dragging left/right), as represented by spin/rotation.
+        <strong>CMD+Dragging</strong>
+        lets you adjust a shape's vibrato, as represented by a ruler of varying
+        length (dragging left/right) and divisions (dragging up/dow).
       </p>
+
+      <h2>Demo</h2>
       <p>
-        <strong>CMD+Dragging</strong> lets you adjust a shape's vibrato, as
-        represented by a ruler of varying length (dragging left/right) and
-        divisions (dragging up/dow).
+        Here is a more stylistic compilation of some sounds you can achieve with
+        this plugin.
       </p>
+      <iframe
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        frameborder="0"
+        height="315"
+        src="https://www.youtube.com/embed/b5UOwJX5gpk"
+        title="YouTube video player"
+        width="560"
+      ></iframe>
 
       <h2>More on how it works</h2>
-
       <p>
-        <img style="width: 100%; max-width: 800px" src="./abcs-diagram-2.png" />
+        <img src="./abcs-diagram-2.png" style="width: 100%; max-width: 800px" />
       </p>
 
       <p>
@@ -85,11 +127,11 @@
         interface. This means that four oscillators are active for each note
         played. The incoming frequency (the blue note) is multiplied based on
         the rod that the shapes are located, and the different types of shape
-        produce different waveforms (as described above). The shape-specific
-        effects also modulate the sound here -- these are described in detail
-        below. The four signals are then combined and fed through the ADSR
-        envelope, the parameters of which are controlled through the interface,
-        and then sent to the output.
+        each produce different waveforms (as described above). The
+        shape-specific effects also modulate the sound here -- these are
+        described in detail above. The four signals are then combined and fed
+        through the ADSR envelope, the parameters of which are controlled
+        through the interface, and then sent to the output.
       </p>
       <p>
         This whole process happens for each "voice" of the synth. A voice only
