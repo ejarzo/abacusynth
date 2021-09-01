@@ -40,3 +40,7 @@ h2,
 h3 {
   font-family: Futura, sans-serif;
 }
+
+iframe {
+  max-width: 100%;
+}
