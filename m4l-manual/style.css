@@ -4,10 +4,15 @@
 
 html,
 body {
-  background: #eee;
+  font-family: Helvetica, sans-serif;
+  font-weight: light;
+  background: rgb(238, 236, 233);
+  color: rgb(34, 33, 32);
 }
 
 main {
+  line-height: 1.4;
+  font-size: 1.2em;
   max-width: 1000px;
   margin: 0 auto;
   padding: 2em;
@@ -15,4 +20,23 @@ main {
 
 figure {
   margin: 2em 0;
+}
+
+img {
+  box-shadow: 0 4px 50px -10px rgba(0, 0, 0, 0.2);
+}
+
+a {
+  color: #a44098;
+}
+code {
+  border-radius: 2px;
+  background: rgb(255, 255, 255);
+  padding: 0.1em 0.2em;
+}
+
+h1,
+h2,
+h3 {
+  font-family: Futura, sans-serif;
 }
