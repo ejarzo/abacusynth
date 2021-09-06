@@ -11,6 +11,22 @@
       <div>
         <div>
           <h1>Abacusynth: User Manual</h1>
+          <ol class="toc">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#controls">Controls</a></li>
+            <li><a href="#usage-in-ableton">Usage in Ableton</a></li>
+            <ol>
+              <li>
+                <a href="#saving-presets">Saving Presets</a>
+              </li>
+              <li>
+                <a href="#recording-automation">Recording Automation</a>
+              </li>
+            </ol>
+            <li><a href="#demo">Demo</a></li>
+            <li><a href="#more-on-how-it-works">More on How it Works</a></li>
+          </ol>
+
           <p>
             This page details how to use the Abacusynth plugin by
             <a target="blank" href="https://eliasjarzombek.com"
@@ -20,38 +36,40 @@
           <p>
             Found a bug or have questions/comments? Please send me an email at
             <code>ejarz25[at]pm[dot]me</code>, or find me on
-            <a target="blank" href="https://twitter.com/jarz_0">Twitter</a> --
+            <a target="blank" href="https://twitter.com/jarz_0">Twitter</a> or <a target="blank" href="https://www.instagram.com/jarz_0/">Instagram</a> --
             Thanks!
           </p>
         </div>
 
         <div>
           <figure>
-            <div><img src="abacusynth-window-screenshot.png" /></div>
+            <div>
+              <img
+                style="max-width: 500px"
+                src="abacusynth-window-screenshot.png"
+              />
+            </div>
             <figcaption>
-              The plugin window -- place shapes on rods to build your synth
-              sound.
+              <em>The plugin window</em>
             </figcaption>
           </figure>
           <figure>
             <div><img src="abacusynth-plugin-screenshot.png" /></div>
             <figcaption>
-              The plugin inside Ableton's device view -- "Auto" means the plugin
-              window will open when the track is selected, "Close" will keep it
-              closed when switching tracks, and "Open" will keep it open.
+              <em>The plugin inside Ableton's device view</em>
             </figcaption>
           </figure>
         </div>
       </div>
 
-      <h2>Overview</h2>
+      <h2 id="overview">Overview</h2>
       <p>
         The Abacusynth is a polyphonic synthesizer plugin for Ableton Live. It
-        is fundamentally an additive synthesizer, so you create the sound by
-        adding and manipulating oscillators (as represented by shapes).
+        is fundamentally an <a href="https://en.wikipedia.org/wiki/Additive_synthesis" target="blank">additive synthesizer</a>, so you create the sound by
+        adding and manipulating oscillators (as represented by shapes in the interface).
       </p>
 
-      <h2>Controls</h2>
+      <h2 id="controls">Controls</h2>
       <p>
         When the plugin loads the rods will be empty and it will not make any
         sound. Build your synth sounds by placing shapes on the rods.
@@ -73,7 +91,29 @@
           keys.</strong
         >
       </p>
-      <p>This video demonstrates how to control the shapes.</p>
+      <p>
+        <h3>Dragging</h3>
+        Moving a shape left or right on the rod adjusts the cutoff frequency of a low
+        pass filter so shapes on the left sound "darker" and shapes on the right
+        sound "brighter". This effect reflected in the UI by displaying the rods
+        as a gradient from dark to light. Moving it up or down changes its harmonic.
+      </p>
+      <p>
+        <h3>SHIFT+Dragging</h3>
+        Hold SHIFT while dragging to control a shape's volume (dragging up/down), as represented
+        by size, and stereo pan effect (dragging right/left), as represented by
+        spin/rotation.
+      </p>
+      <p>
+        <h3>CMD+Dragging</h3>
+        Hold CMD while dragging to adjust a shape's vibrato, as represented by a ruler of varying
+        length (drag right to increase/left to decrease) and divisions (dragging up/down).
+      </p>
+      <p>
+        <h3>Double Click</h3>
+        Double click to delete a shape.
+      </p>
+      <p>This video demonstrates the above controls.</p>
       <p>
         <iframe
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -86,26 +126,35 @@
         ></iframe>
       </p>
 
+      <h2 id="usage-in-ableton">Usage in Ableton</h2>
+      <h3 id="saving-presets">Saving Presets</h3>
       <p>
-        <strong>Moving</strong>
-        a shape left or right on the rod adjusts the cutoff frequency of a low
-        pass filter so shapes on the left sound "darker" and shapes on the right
-        sound "brighter". This effect reflected in the UI by displaying the rods
-        as a gradient from dark to light.
+        The device allows you to load several pre-installed presets. However, if
+        you would like to save your own, you can use the built in Ableton Preset
+        system. Click the save icon in the top right of the device to do this.
       </p>
-      <p>
-        <strong>SHIFT+Dragging</strong>
-        a shape lets you control its volume (dragging up/down), as represented
-        by size, and stereo pan effect (dragging left/right), as represented by
-        spin/rotation.
-      </p>
-      <p>
-        <strong>CMD+Dragging</strong>
-        lets you adjust a shape's vibrato, as represented by a ruler of varying
-        length (dragging left/right) and divisions (dragging up/dow).
-      </p>
+      <img src="save-button-screenshot.png" />
 
-      <h2>Demo</h2>
+      <h3 id="recording-automation">Recording Automation</h3>
+      <p>
+        One limitation of the device is that changes you make to the shapes are
+        not recorded as automation. To get around this, I recommend
+        <a
+          href="https://www.ableton.com/en/manual/routing-and-i-o/#15-5-internal-routings"
+          >recording the track output to a new audio track</a
+        >
+        so that you can save longer evolving progressions.
+      </p>
+      <p>Changes to the ADSR envelope can be recorded as automation.</p>
+
+      <h3 id="managing-plugin-window">Managing the Plugin Window</h3>
+      <p>
+        You can use the tab control on the device to control the plugin window.
+        "Auto" means the plugin window will open when the track is selected,
+        "Close" will keep it closed when switching tracks, and "Open" will keep
+        it open.
+      </p>
+      <h2 id="demo">Demo</h2>
       <p>
         Here is a more stylistic compilation of some sounds you can achieve with
         this plugin.
@@ -120,7 +169,7 @@
         title="YouTube video player"
       ></iframe>
 
-      <h2>More on How it Works</h2>
+      <h2 id="more-on-how-it-works">More on How it Works</h2>
       <p>
         <img src="./abcs-diagram-2.png" style="width: 100%; max-width: 800px" />
       </p>
