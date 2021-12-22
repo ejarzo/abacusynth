@@ -24,7 +24,7 @@
                 <a href="#recording-automation">Recording Automation</a>
               </li>
             </ol>
-            <li><a href="#more-on-how-it-works">More on How it Works</a></li>
+            <!-- <li><a href="#more-on-how-it-works">More on How it Works</a></li> -->
           </ol>
 
           <p>
@@ -80,6 +80,7 @@
       <h2 id="demo">Demo</h2>
       <p>
         Here is a compilation of some sounds you can achieve with this plugin.
+        Footage may show earlier versions of the interface.
       </p>
       <iframe
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -103,14 +104,26 @@
         to clear all shapes, or press "Randomize" to generate a random
         arrangement.
       </p>
+
+      <p>
+        <iframe
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          frameborder="0"
+          height="472.5"
+          width="840"
+          src="https://www.youtube.com/embed/gvGFZSzaMGs"
+          title="YouTube video player"
+        ></iframe>
+      </p>
+
       <p>
         Each shape represents an oscillator. The rod it is on represents its
         <a href="https://en.wikipedia.org/wiki/Harmonic">harmonic</a>, so shapes
         on the lowest rod will oscillate at the fundamental frequency, those on
         the second rod will oscillate at twice the fundamental, etc. The type of
-        shape represents its waveform (circle -> sine wave, square -> square
-        wave, equilateral triangle -> triangle wave, right triangle -> sawtooth
-        wave).
+        shape represents its waveform (circle = sine wave, square = square wave,
+        equilateral triangle = triangle wave, right triangle = sawtooth wave).
       </p>
 
       <p>
@@ -121,12 +134,12 @@
         >
       </p>
       <h3>Dragging</h3>
+      <p>Moving it <strong>up or down</strong> changes its harmonic.</p>
       <p>
-        Moving a shape left or right on the rod adjusts the cutoff frequency of
-        a low pass filter so shapes on the left sound "darker" and shapes on the
-        right sound "brighter". This effect reflected in the UI by displaying
-        the rods as a gradient from dark to light. Moving it up or down changes
-        its harmonic.
+        Moving a shape <strong>left or right</strong> on the rod adjusts the
+        cutoff frequency of a low pass filter so shapes on the left sound
+        "darker" and shapes on the right sound "brighter". This effect reflected
+        in the UI by displaying the rods as a gradient from dark to light.
       </p>
       <h3>SHIFT+Dragging</h3>
       <p>
@@ -142,18 +155,7 @@
       </p>
       <h3>Double Click</h3>
       <p>Double click to delete a shape.</p>
-      <p>This video demonstrates the above controls.</p>
-      <p>
-        <iframe
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-          frameborder="0"
-          height="472.5"
-          width="840"
-          src="https://www.youtube.com/embed/gvGFZSzaMGs"
-          title="YouTube video player"
-        ></iframe>
-      </p>
+      <!-- <p>This video demonstrates the above controls.</p> -->
 
       <h2 id="usage-in-ableton">Usage in Ableton</h2>
       <h3 id="saving-presets">Saving Presets</h3>
@@ -184,7 +186,7 @@
         it open.
       </p>
 
-      <h2 id="more-on-how-it-works">More on How it Works</h2>
+      <!-- <h2 id="more-on-how-it-works">More on How it Works</h2>
       <p>
         <img src="./abcs-diagram-2.png" style="width: 100%; max-width: 800px" />
       </p>
@@ -206,7 +208,7 @@
         if we want to play more than one note at the same time -- this is called
         polyphony. The gray "Voice 2" box is meant to represent the same exact
         process as Voice 1, but for a different note.
-      </p>
+      </p> -->
     </main>
   </body>
 </html>
