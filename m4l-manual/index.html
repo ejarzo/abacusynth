@@ -2,213 +2,410 @@
 <html lang="en">
   <head>
     <link href="style.css" rel="stylesheet" type="text/css" />
-    <title>Abacusynth: User Manual</title>
+    <title>Abacusynth: User Guide</title>
     <meta charset="utf-8" />
   </head>
 
   <body>
     <main>
       <div>
-        <div>
-          <h1>Abacusynth: User Manual</h1>
-          <ol class="toc">
-            <li><a href="#overview">Overview</a></li>
-            <li><a href="#demo">Demo</a></li>
-            <li><a href="#controls">Controls</a></li>
-            <li><a href="#usage-in-ableton">Usage in Ableton</a></li>
-            <ol>
-              <li>
-                <a href="#saving-presets">Saving Presets</a>
-              </li>
-              <li>
-                <a href="#recording-automation">Recording Automation</a>
-              </li>
-            </ol>
-            <!-- <li><a href="#more-on-how-it-works">More on How it Works</a></li> -->
+        <ol class="toc">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#installation">Installation</a></li>
+          <!-- <li><a href="#demo">Demo</a></li> -->
+          <li><a href="#controls">Controls</a></li>
+          <li><a href="#usage-in-ableton">Usage in Ableton</a></li>
+          <ol class="sublist">
+            <li>
+              <a href="#managing-plugin-window">Plugin Window</a>
+            </li>
+            <li>
+              <a href="#saving-presets">Saving Presets</a>
+            </li>
+            <li>
+              <a href="#recording-automation">Recording Automation</a>
+            </li>
           </ol>
+        </ol>
+      </div>
+      <div>
+        <div>
+          <div>
+            <h1>Abacusynth: User Guide</h1>
+            <p>
+              This page details how to use the Abacusynth plugin by
+              <a target="blank" href="https://eliasjarzombek.com"
+                >Elias Jarzombek</a
+              >
+            </p>
+            <p>
+              Found a bug or have questions/comments? Please send me an email at
+              <code>ejarz[at]pm[dot]me</code>, or find me on
+              <a target="blank" href="https://twitter.com/jarz_0">Twitter</a> or
+              <a target="blank" href="https://www.instagram.com/jarz_0/"
+                >Instagram</a
+              >
+              -- Thanks!
+            </p>
 
+            <!-- <li><a href="#more-on-how-it-works">More on How it Works</a></li> -->
+          </div>
+
+          <h2 id="overview">Overview</h2>
           <p>
-            This page details how to use the Abacusynth plugin by
-            <a target="blank" href="https://eliasjarzombek.com"
-              >Elias Jarzombek</a
+            The Abacusynth is a polyphonic synthesizer plugin for Ableton Live.
+            It employs a combination of
+            <a
+              href="https://en.wikipedia.org/wiki/Additive_synthesis"
+              target="blank"
+              >additive</a
             >
-          </p>
-          <p>
-            Found a bug or have questions/comments? Please send me an email at
-            <code>ejarz[at]pm[dot]me</code>, or find me on
-            <a target="blank" href="https://twitter.com/jarz_0">Twitter</a> or
-            <a target="blank" href="https://www.instagram.com/jarz_0/"
-              >Instagram</a
+            and
+            <a
+              href="https://en.wikipedia.org/wiki/Subtractive_synthesis"
+              target="blank"
+              >subtractive</a
             >
-            -- Thanks!
+            synthesis, where you create the sound by adding and filtering
+            <strong>oscillators</strong>, as represented by
+            <strong>shapes</strong> in the interface.
           </p>
+          <div>
+            <figure>
+              <div>
+                <img
+                  style="max-width: 500px"
+                  src="img/abacusynth-window-screenshot.png"
+                />
+              </div>
+              <figcaption>
+                <em>The plugin window</em>
+              </figcaption>
+            </figure>
+            <figure>
+              <div>
+                <img width="200" src="img/abacusynth-plugin-screenshot.png" />
+              </div>
+              <figcaption>
+                <em>The plugin inside Ableton's device view</em>
+              </figcaption>
+            </figure>
+          </div>
         </div>
 
-        <div>
-          <figure>
+        <h2 id="installation">Installation</h2>
+        <div style="min-width: 200px">
+          <figure style="margin-top: 0">
             <div>
-              <img
-                style="max-width: 500px"
-                src="abacusynth-window-screenshot.png"
-              />
+              <img src="img/ableton-user-library.png" />
             </div>
             <figcaption>
-              <em>The plugin window</em>
-            </figcaption>
-          </figure>
-          <figure>
-            <div><img src="abacusynth-plugin-screenshot.png" /></div>
-            <figcaption>
-              <em>The plugin inside Ableton's device view</em>
+              <em>Ableton User Library</em>
             </figcaption>
           </figure>
         </div>
-      </div>
+        <p style="margin-top: 0; padding-right: 2em">
+          To get started you can simply drag the
+          <code>Abacusynth.amxd</code> file into Ableton Live. Ideally you will
+          also want to save it to your <strong>User Library</strong>. To do this
+          right click on "User Library" in the Ableton sidebar and select "Show
+          in Finder/Explorer". If you don't already have a folder there for Max
+          Devices, you can create one and place
+          <code>Abacusynth.amxd</code> inside.
+        </p>
 
-      <h2 id="overview">Overview</h2>
-      <p>
-        The Abacusynth is a polyphonic synthesizer plugin for Ableton Live. It
-        is fundamentally an
-        <a
-          href="https://en.wikipedia.org/wiki/Additive_synthesis"
-          target="blank"
-          >additive synthesizer</a
-        >, so you create the sound by adding and manipulating oscillators (as
-        represented by shapes in the interface).
-      </p>
-
-      <h2 id="demo">Demo</h2>
-      <p>
-        Here is a compilation of some sounds you can achieve with this plugin.
-        Footage may show earlier versions of the interface.
-      </p>
-      <iframe
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-        frameborder="0"
-        height="472.5"
-        width="840"
-        src="https://www.youtube.com/embed/b5UOwJX5gpk"
-        title="YouTube video player"
-      ></iframe>
-
-      <h2 id="controls">Controls</h2>
-      <p>
-        Build your synth sound by placing shapes on the rods and manipulating
-        them. Select which shape you are placing using the colored buttons on
-        the right.
-      </p>
-      <p>
-        When the plugin loads it will default to one of the built-in presets.
-        You can load a different plugin using the dropdown menu, press "Reset"
-        to clear all shapes, or press "Randomize" to generate a random
-        arrangement.
-      </p>
-
-      <p>
+        <!-- <h2 id="demo">Demo</h2>
+        <p>
+          Here is a compilation of some sounds you can achieve with this plugin.
+          Footage may show earlier versions of the interface.
+        </p>
         <iframe
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
           frameborder="0"
           height="472.5"
           width="840"
-          src="https://www.youtube.com/embed/gvGFZSzaMGs"
+          src="https://www.youtube.com/embed/b5UOwJX5gpk"
           title="YouTube video player"
-        ></iframe>
-      </p>
+        ></iframe> -->
 
-      <p>
-        Each shape represents an oscillator. The rod it is on represents its
-        <a href="https://en.wikipedia.org/wiki/Harmonic">harmonic</a>, so shapes
-        on the lowest rod will oscillate at the fundamental frequency, those on
-        the second rod will oscillate at twice the fundamental, etc. The type of
-        shape represents its waveform (circle = sine wave, square = square wave,
-        equilateral triangle = triangle wave, right triangle = sawtooth wave).
-      </p>
+        <h2 id="controls">Controls</h2>
+        <p>
+          Build your synth sound by placing shapes on the rods and manipulating
+          them.
+        </p>
+        <!-- <figure style="margin-top: 0">
+          <div>
+            <img src="img/abacusynth-bottom-panel.png" />
+          </div>
+          <figcaption>
+            <em>Abacusynth Lower Panel</em>
+          </figcaption>
+        </figure> -->
 
-      <p>
-        Each shape/oscillator also has several parameters that can be adjusted.
-        <strong
-          >This is done by dragging the shape while holding modifier
-          keys.</strong
-        >
-      </p>
-      <h3>Dragging</h3>
-      <p>Moving it <strong>up or down</strong> changes its harmonic.</p>
-      <p>
-        Moving a shape <strong>left or right</strong> on the rod adjusts the
-        cutoff frequency of a low pass filter so shapes on the left sound
-        "darker" and shapes on the right sound "brighter". This effect reflected
-        in the UI by displaying the rods as a gradient from dark to light.
-      </p>
-      <h3>SHIFT+Dragging</h3>
-      <p>
-        Hold SHIFT while dragging to control a shape's volume (dragging
-        up/down), as represented by size, and stereo pan effect (dragging
-        right/left), as represented by spin/rotation.
-      </p>
-      <h3>CMD+Dragging</h3>
-      <p>
-        Hold CMD while dragging to adjust a shape's vibrato, as represented by a
-        ruler of varying length (drag right to increase/left to decrease) and
-        divisions (dragging up/down).
-      </p>
-      <h3>Double Click</h3>
-      <p>Double click to delete a shape.</p>
-      <!-- <p>This video demonstrates the above controls.</p> -->
+        <h3>Presets</h3>
+        <div style="min-width: 200px">
+          <figure style="margin-top: 0">
+            <div>
+              <img src="img/abacusynth-preset-panel.png" />
+            </div>
+            <figcaption>
+              <em>Center panel</em>
+            </figcaption>
+          </figure>
+        </div>
+        <p>
+          When the plugin loads it will default to one of the built-in presets.
+          You can load a different one using the dropdown menu, press "Reset" to
+          clear all shapes, or press "Randomize" to generate a random
+          arrangement. The oscilloscope shows the synth's output.
+        </p>
 
-      <h2 id="usage-in-ableton">Usage in Ableton</h2>
-      <h3 id="saving-presets">Saving Presets</h3>
-      <p>
-        The device allows you to load several pre-installed presets. However, if
-        you would like to save your own, you can use the built in Ableton Preset
-        system. Click the save icon in the top right of the device to do this.
-      </p>
-      <img src="save-button-screenshot.png" />
+        <h3>Shapes</h3>
+        <figure style="margin-top: 0">
+          <div>
+            <img src="img/abacusynth-shapes.png" />
+          </div>
+          <figcaption>
+            <em>Shape buttons</em>
+          </figcaption>
+        </figure>
+        <div>
+          <div>
+            <p>
+              The shape buttons allow you to change which shape you are placing
+              on the above rods. Each shape you add represents an oscillator,
+              and the type represents its waveform:
+            </p>
+            <ol style="list-style: none">
+              <li>circle = sine wave</li>
+              <li>square = square wave</li>
+              <li>equilateral triangle = triangle wave</li>
+              <li>right triangle = sawtooth wave</li>
+            </ol>
+          </div>
+        </div>
 
-      <h3 id="recording-automation">Recording Automation</h3>
-      <p>
-        One limitation of the device is that changes you make to the shapes are
-        not recorded as automation. To get around this, I recommend
-        <a
-          href="https://www.ableton.com/en/manual/routing-and-i-o/#15-5-internal-routings"
-          >recording the track output to a new audio track</a
-        >
-        so that you can save longer evolving progressions.
-      </p>
-      <p>Changes to the ADSR envelope can be recorded as automation.</p>
+        <!-- <p>
+          <iframe
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            frameborder="0"
+            height="472.5"
+            width="840"
+            src="https://www.youtube.com/embed/gvGFZSzaMGs"
+            title="YouTube video player"
+          ></iframe>
+        </p> -->
 
-      <h3 id="managing-plugin-window">Managing the Plugin Window</h3>
-      <p>
-        You can use the tab control on the device to control the plugin window.
-        "Auto" means the plugin window will open when the track is selected,
-        "Close" will keep it closed when switching tracks, and "Open" will keep
-        it open.
-      </p>
+        <!-- <p>
+          Each shape/oscillator also has several parameters that can be
+          adjusted.
+          <strong
+            >This is done by dragging the shape while holding modifier
+            keys.</strong
+          >
+        </p> -->
+        <h3>Rods</h3>
+        <p>
+          <strong>Click</strong> to place a shape on a rod.
+          <strong>Double click</strong> to delete it.
+        </p>
+        <div>
+          <div style="display: flex">
+            <div class="video-container">
+              <video
+                autoplay
+                controls
+                loop
+                muted
+                class="video-clip"
+                src="video/abcs-drag-up-down.mp4"
+              ></video>
+            </div>
+            <div>
+              <div class="video-info">
+                ← <strong>Click</strong> to Play/Pause.
+                <strong>Hover</strong> to unmute.
+              </div>
+            </div>
+          </div>
+          <div>
+            <p>
+              Moving a shape <strong>up or down</strong> changes the
+              oscillator's
+              <a href="https://en.wikipedia.org/wiki/Harmonic">harmonic</a>, so
+              shapes on the lowest rod will oscillate at the fundamental
+              frequency, those on the second rod will oscillate at twice the
+              fundamental, etc.
+            </p>
+          </div>
+        </div>
+        <div class="video-container">
+          <video
+            autoplay
+            controls
+            loop
+            muted
+            class="video-clip"
+            src="video/abcs-drag-left-right.mp4"
+          ></video>
+        </div>
+        <p>
+          Moving a shape <strong>left or right</strong> on the rod adjusts the
+          cutoff frequency of a low pass filter so shapes on the left sound
+          "darker" and shapes on the right sound "brighter". This effect
+          reflected in the UI by displaying the rods as a gradient from dark to
+          light.
+        </p>
+        <h3>SHIFT+Dragging</h3>
+        <p>
+          Hold SHIFT while dragging to control a shape's volume (dragging
+          up/down), as represented by size, and stereo pan effect (dragging
+          right/left), as represented by spin/rotation.
+        </p>
 
-      <!-- <h2 id="more-on-how-it-works">More on How it Works</h2>
-      <p>
-        <img src="./abcs-diagram-2.png" style="width: 100%; max-width: 800px" />
-      </p>
+        <div class="video-container">
+          <video
+            autoplay
+            controls
+            loop
+            muted
+            class="video-clip"
+            src="video/abcs-shift-drag-left-right.mp4"
+          ></video>
+        </div>
+        <figcaption>
+          <em
+            >SHIFT+Drag right to increase auto pan, left to decrease (Most
+            noticeable in headphones).</em
+          >
+        </figcaption>
+        <p></p>
+        <div class="video-container">
+          <video
+            autoplay
+            controls
+            loop
+            muted
+            class="video-clip"
+            src="video/abcs-shift-drag-up-down.mp4"
+          ></video>
+        </div>
+        <figcaption>
+          <em>SHIFT+Drag up to increase volume, down to decrease.</em>
+        </figcaption>
 
-      <p>
-        In this diagram we see that four shapes have been placed using the
-        interface. This means that four oscillators are active for each note
-        played. The incoming frequency (the blue note) is multiplied based on
-        the rod that the shapes are located, and the different types of shape
-        each produce different waveforms (as described above). The
-        shape-specific effects also modulate the sound here -- these are
-        described in detail above. The four signals are then combined and fed
-        through the ADSR envelope, the parameters of which are controlled
-        through the interface, and then sent to the output.
-      </p>
-      <p>
-        This whole process happens for each "voice" of the synth. A voice only
-        operates on one fundamental frequency, so multiple voices are required
-        if we want to play more than one note at the same time -- this is called
-        polyphony. The gray "Voice 2" box is meant to represent the same exact
-        process as Voice 1, but for a different note.
-      </p> -->
+        <h3>CMD+Dragging</h3>
+        <p>
+          Hold CMD while dragging to adjust a shape's vibrato, as represented by
+          a ruler of varying length (drag right to increase/left to decrease)
+          and divisions (dragging up/down).
+        </p>
+        <div class="video-container">
+          <video
+            autoplay
+            controls
+            loop
+            muted
+            class="video-clip"
+            src="video/abcs-cmd-drag-left-right.mp4"
+          ></video>
+        </div>
+        <figcaption>
+          <em>CMD+Drag right to increase vibrato depth, left to decrease </em>
+        </figcaption>
+        <p></p>
+        <div class="video-container">
+          <video
+            autoplay
+            controls
+            loop
+            muted
+            class="video-clip"
+            src="video/abcs-cmd-drag-up-down.mp4"
+          ></video>
+        </div>
+        <figcaption>
+          <em>CMD+Drag up to increase vibrator rate, down to decrease.</em>
+        </figcaption>
+
+        <!-- <p>This video demonstrates the above controls.</p> -->
+
+        <h2 id="usage-in-ableton">Usage in Ableton</h2>
+        <h3 id="managing-plugin-window">Managing the Plugin Window</h3>
+        <p>
+          You can use the tab control on the device to control the plugin
+          window. "Auto" means the plugin window will open when the track is
+          selected, "Close" will keep it closed when switching tracks, and
+          "Open" will keep it open.
+        </p>
+        <h3 id="saving-presets">Saving Presets</h3>
+        <p>
+          The device allows you to load several pre-installed presets. If you
+          would like to save your own, you can use the built in Ableton Preset
+          system. Click the save icon in the top right of the device to do this.
+        </p>
+        <img src="img/save-button-screenshot.png" />
+
+        <h3 id="recording-automation">Recording Automation</h3>
+        <p>
+          All UI changes can be recorded as automation. You can record them live
+          or edit the automation by clicking the "Edit Automation" button which
+          will show the editable parameters. For each parameter,
+          <strong>Right click</strong> to show the automation (or select from
+          the track dropdown).
+        </p>
+        <figure>
+          <div>
+            <img src="img/abacusynth-automation-view.png" />
+          </div>
+          <figcaption>
+            <em>Click "Edit Automation" to toggle the automation view</em>
+          </figcaption>
+        </figure>
+        <p>
+          Changes to the ADSR envelope are also recorded as automation, however
+          they must be accessed through the main plugin window.
+        </p>
+      </div>
     </main>
+
+    <script>
+      const isVideoPlaying = (video) =>
+        !!(
+          video.currentTime > 0 &&
+          !video.paused &&
+          !video.ended &&
+          video.readyState > 2
+        );
+
+      window.onload = function () {
+        const vids = document.getElementsByClassName("video-clip");
+        for (let i = 0; i < vids.length; i++) {
+          const vid = vids[i];
+          vid.onmouseover = (e) => {
+            vid.muted = false;
+            vid.autoplay = true;
+            vid.play();
+            if (isVideoPlaying(vid)) {
+              vid.classList.add("is-playing");
+            } else {
+              vid.classList.remove("is-playing");
+            }
+          };
+          vid.onmouseout = () => {
+            vid.muted = true;
+            vid.autoplay = true;
+            vid.play();
+            if (isVideoPlaying(vid)) {
+              vid.classList.add("is-playing");
+            } else {
+              vid.classList.remove("is-playing");
+            }
+          };
+        }
+      };
+    </script>
   </body>
 </html>

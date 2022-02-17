@@ -11,24 +11,49 @@ body {
 }
 
 .toc {
+  font-family: Futura, sans-serif;
+  /* position: fixed; */
+  min-width: 250px;
+  left: 0;
+  top: 0;
   /* background-color: white; */
+  position: sticky;
+  top: 0;
   border-radius: 4px;
-  border: 2px dashed rgb(223, 208, 188);
-  border-left: none;
-  border-right: none;
+  /* border: 2px dashed rgb(223, 208, 188); */
+  /* border-left: none; */
+  /* border-right: none; */
   padding: 2em;
+}
+
+.toc li {
+  padding-bottom: 0.3em;
+}
+
+.image-container {
+  display: flex;
+}
+.sublist {
+  list-style: none;
+  padding-left: 1em;
+  font-size: 0.8em;
+}
+.flex {
+  display: flex;
 }
 
 main {
   line-height: 1.4;
   font-size: 1.2em;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2em;
+  display: flex;
+  position: relative;
 }
 
 figure {
-  margin: 2em 0;
+  margin: 2em 0 1em;
 }
 
 figcaption {
@@ -36,12 +61,17 @@ figcaption {
 }
 
 img {
+  max-width: 100%;
   border-radius: 4px;
   box-shadow: 0 4px 50px -10px rgba(0, 0, 0, 0.2);
 }
 
 a {
-  color: #a44098;
+  color: #231ace;
+  text-decoration: none;
+}
+a:hover {
+  background: #7975ca3d;
 }
 code {
   border-radius: 2px;
@@ -55,6 +85,78 @@ h3 {
   font-family: Futura, sans-serif;
 }
 
+h1 {
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
 iframe {
   max-width: 100%;
+}
+.video-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 420px;
+  min-width: 420px;
+  height: 300px;
+  position: relative;
+  cursor: pointer;
+}
+/* 
+.video-container:hover {
+  outline: 2px dashed #231ace;
+  outline-offset: 2px;
+} */
+
+.video-clip {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  left: 5%;
+  top: 60px;
+  transform: scale(2);
+}
+
+.video-container:after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  font-size: 0.8em;
+  width: 35px;
+  height: 25px;
+  background-image: url("./img/volume-xmark-solid.svg");
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  filter: invert(1);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale3d(0.95, 0.95, 1);
+  }
+  100% {
+    transform: scale3d(1.05, 1.05, 1);
+  }
+}
+.video-container:hover:after {
+  animation: pulse 0.3s alternate infinite;
+  background-image: url("./img/volume-high-solid.svg");
+}
+
+.video-info {
+  border: 2px dashed #c1bfe9;
+  padding: 5px;
+  border-radius: 5px;
+  background: #ceccf0;
+  display: inline-block;
+  margin-left: 1em;
+  color: #3932c4;
+  top: 0;
 }
