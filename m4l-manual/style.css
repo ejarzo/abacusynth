@@ -4,14 +4,14 @@
 
 html,
 body {
-  font-family: Helvetica, sans-serif;
+  font-family: Georgia, Helvetica, sans-serif;
   font-weight: light;
   background: rgb(238, 236, 233);
   color: rgb(34, 33, 32);
 }
 
 .toc {
-  font-family: Futura, sans-serif;
+  font-family: Futura, 'Nunito Sans', Georgia, sans-serif;
   /* position: fixed; */
   min-width: 250px;
   left: 0;
@@ -82,7 +82,7 @@ code {
 h1,
 h2,
 h3 {
-  font-family: Futura, sans-serif;
+  font-family: Futura, 'Nunito Sans', Georgia, sans-serif;
 }
 
 h1 {
