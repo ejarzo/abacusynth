@@ -582,7 +582,7 @@ const drawBackground = (ctx) => {
 };
 
 function setup() {
-  canv = createCanvas(800, 1000);
+  canv = createCanvas(720, 900);
   canv.parent("sketch");
   inputHeight = height * (2 / 3);
   sectionHeight = (inputHeight * 0.85) / NUM_HARMONICS;

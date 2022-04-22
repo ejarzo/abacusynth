@@ -12,6 +12,7 @@ body {
 }
 
 canvas {
+  margin-top: 28px;
   box-shadow: 0 20px 150px -10px rgba(0, 0, 0, 0.9);
 }
 
@@ -41,6 +42,23 @@ button:hover {
 
 button:active {
   transform: scale(0.95, 0.95) translate(1px, -1px);
+}
+
+.banner {
+  background: rgb(238, 236, 233);
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 5;
+}
+
+.banner a {
+  display: block;
+  height: 100%;
+  padding: 2px 0;
+  color: #231ace;
 }
 
 .tooltip {
