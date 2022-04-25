@@ -9,6 +9,12 @@
       rel="stylesheet"
     />
 
+    <script
+      defer
+      data-domain="abacusynth.eliasjarzombek.com"
+      src="https://plausible.io/js/plausible.js"
+    ></script>
+
     <title>Abacusynth: User Guide</title>
     <meta charset="utf-8" />
   </head>
@@ -245,7 +251,7 @@
           <strong>Double click</strong> to delete it.
         </p>
         <div>
-          <div style="display: flex">
+          <div class="flex video-section">
             <div class="video-container">
               <video
                 autoplay
@@ -261,9 +267,17 @@
                 ← <strong>Click</strong> to Play/Pause.
                 <strong>Hover</strong> to unmute.
               </div>
+              <p class="video-explanation">
+                Moving a shape <strong>up or down</strong> changes the
+                oscillator's
+                <a href="https://en.wikipedia.org/wiki/Harmonic">harmonic</a>,
+                so shapes on the lowest rod will oscillate at the fundamental
+                frequency, those on the second rod will oscillate at twice the
+                fundamental, etc.
+              </p>
             </div>
           </div>
-          <div>
+          <!-- <div>
             <p>
               Moving a shape <strong>up or down</strong> changes the
               oscillator's
@@ -272,96 +286,115 @@
               frequency, those on the second rod will oscillate at twice the
               fundamental, etc.
             </p>
+          </div> -->
+        </div>
+        <div class="flex video-section">
+          <div class="video-container">
+            <video
+              autoplay
+              controls
+              loop
+              muted
+              class="video-clip"
+              src="video/abcs-drag-left-right.mp4"
+            ></video>
+          </div>
+          <div>
+            <p class="video-explanation">
+              Moving a shape <strong>left or right</strong> on the rod adjusts
+              the cutoff frequency of a low pass filter so shapes on the left
+              sound "darker" and shapes on the right sound "brighter". This
+              effect reflected in the UI by displaying the rods as a gradient
+              from dark to light.
+            </p>
           </div>
         </div>
-        <div class="video-container">
-          <video
-            autoplay
-            controls
-            loop
-            muted
-            class="video-clip"
-            src="video/abcs-drag-left-right.mp4"
-          ></video>
-        </div>
-        <p>
-          Moving a shape <strong>left or right</strong> on the rod adjusts the
-          cutoff frequency of a low pass filter so shapes on the left sound
-          "darker" and shapes on the right sound "brighter". This effect
-          reflected in the UI by displaying the rods as a gradient from dark to
-          light.
-        </p>
+
         <h3>SHIFT+Dragging</h3>
         <p>
-          Hold SHIFT while dragging to control a shape's volume (dragging
-          up/down), as represented by size, and stereo pan effect (dragging
-          right/left), as represented by spin/rotation.
+          Hold SHIFT while dragging to control a shape's volume (size) and
+          stereo pan effect (rotation).
         </p>
+        <div class="flex video-section">
+          <div class="video-container">
+            <video
+              autoplay
+              controls
+              loop
+              muted
+              class="video-clip"
+              src="video/abcs-shift-drag-up-down.mp4"
+            ></video>
+          </div>
+          <div>
+            <p class="video-explanation">
+              SHIFT+Drag <strong>up</strong> to increase volume,
+              <strong>down</strong> to decrease.
+            </p>
+          </div>
+        </div>
 
-        <div class="video-container">
-          <video
-            autoplay
-            controls
-            loop
-            muted
-            class="video-clip"
-            src="video/abcs-shift-drag-left-right.mp4"
-          ></video>
+        <div class="flex video-section">
+          <div class="video-container">
+            <video
+              autoplay
+              controls
+              loop
+              muted
+              class="video-clip"
+              src="video/abcs-shift-drag-left-right.mp4"
+            ></video>
+          </div>
+          <div>
+            <p class="video-explanation">
+              SHIFT+Drag <strong>right</strong> to increase auto pan,
+              <strong>left</strong> to decrease (Most noticeable in headphones)
+            </p>
+          </div>
         </div>
-        <figcaption>
-          <em
-            >SHIFT+Drag right to increase auto pan, left to decrease (Most
-            noticeable in headphones).</em
-          >
-        </figcaption>
-        <p></p>
-        <div class="video-container">
-          <video
-            autoplay
-            controls
-            loop
-            muted
-            class="video-clip"
-            src="video/abcs-shift-drag-up-down.mp4"
-          ></video>
-        </div>
-        <figcaption>
-          <em>SHIFT+Drag up to increase volume, down to decrease.</em>
-        </figcaption>
 
         <h3>CMD+Dragging</h3>
         <p>
           Hold CMD while dragging to adjust a shape's vibrato, as represented by
-          a ruler of varying length (drag right to increase/left to decrease)
-          and divisions (dragging up/down).
+          a ruler of varying length.
         </p>
-        <div class="video-container">
-          <video
-            autoplay
-            controls
-            loop
-            muted
-            class="video-clip"
-            src="video/abcs-cmd-drag-left-right.mp4"
-          ></video>
+
+        <div class="flex video-section">
+          <div class="video-container">
+            <video
+              autoplay
+              controls
+              loop
+              muted
+              class="video-clip"
+              src="video/abcs-cmd-drag-left-right.mp4"
+            ></video>
+          </div>
+          <div>
+            <p class="video-explanation">
+              CMD+Drag <strong>right</strong> to increase vibrato depth,
+              <strong>left</strong> to decrease.
+            </p>
+          </div>
         </div>
-        <figcaption>
-          <em>CMD+Drag right to increase vibrato depth, left to decrease </em>
-        </figcaption>
-        <p></p>
-        <div class="video-container">
-          <video
-            autoplay
-            controls
-            loop
-            muted
-            class="video-clip"
-            src="video/abcs-cmd-drag-up-down.mp4"
-          ></video>
+        <div class="flex video-section">
+          <div class="video-container">
+            <video
+              autoplay
+              controls
+              loop
+              muted
+              class="video-clip"
+              src="video/abcs-cmd-drag-up-down.mp4"
+            ></video>
+          </div>
+          <div>
+            <p class="video-explanation">
+              CMD+Drag <strong>up</strong> to increase vibrator rate,
+              <strong>down</strong> to decrease.
+            </p>
+          </div>
         </div>
-        <figcaption>
-          <em>CMD+Drag up to increase vibrator rate, down to decrease.</em>
-        </figcaption>
 
         <!-- <p>This video demonstrates the above controls.</p> -->
 
