@@ -65,7 +65,7 @@ OUTPUT_NODE.chain(amplitudeEnvelope, analyzer, Tone.Destination);
 Tone.Transport.start();
 amplitudeEnvelope.triggerAttack();
 
-const isCmdPressed = () => key === "Meta";
+const isCmdPressed = () => keyIsDown(224);
 
 const dragBehaviorControls = [
   {
