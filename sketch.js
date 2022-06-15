@@ -65,17 +65,19 @@ OUTPUT_NODE.chain(amplitudeEnvelope, analyzer, Tone.Destination);
 Tone.Transport.start();
 amplitudeEnvelope.triggerAttack();
 
+const isCmdPressed = () => key === "Meta";
+
 const dragBehaviorControls = [
   {
-    getIsSelected: () => !keyIsDown(SHIFT) && !keyIsDown(ALT),
+    getIsSelected: () => !keyIsDown(SHIFT) && !isCmdPressed(),
     renderLogo: () => {
       scale(1.4);
       drawCrosshair();
     },
   },
   {
-    getIsSelected: () => keyIsDown(ALT),
-    label: "OPT/ALT",
+    getIsSelected: isCmdPressed,
+    label: "CMD",
     renderLogo: () => {
       translate(0, -10);
       drawCrosshair();
@@ -381,7 +383,7 @@ function OscillatorShape({
         rotationAmount = 0;
       }
       autoPan.frequency.value = rotationAmountToFrequency(rotationAmount);
-    } else if (keyIsDown(ALT)) {
+    } else if (isCmdPressed()) {
       movementDepth = dragStartMovementDepth + deltaX / (width / 2);
       movementRate = dragStartMovementRate + deltaY / 100;
       movementDepth = constrain(movementDepth, 0, 1);
@@ -400,7 +402,7 @@ function OscillatorShape({
     const [h, s, l] = color;
 
     let light = isHovered ? l * 1.3 : l;
-    if (isHovered && !keyIsDown(ALT) && !keyIsDown(SHIFT)) {
+    if (isHovered && !isCmdPressed() && !keyIsDown(SHIFT)) {
       light = light * map(sin(count / 5), -1, 1, 1, 1.4);
     }
     light = map(pos.x, 0, width, light - 30, light + 15);
@@ -462,7 +464,7 @@ function OscillatorShape({
     noStroke();
     rectMode(CENTER);
     translate(pos.x, pos.y);
-    if (isHovered && keyIsDown(ALT)) {
+    if (isHovered && isCmdPressed()) {
       scale(1, map(sin(count / 5), -1, 1, 1.1, 2));
     }
     rect(0, 0, xAmplitude * 2, harmonicIndex);
@@ -791,7 +793,7 @@ function draw() {
   }
 
   if (hoveredShapeIndex > -1) {
-    if (keyIsDown(ALT)) {
+    if (isCmdPressed()) {
       tooltipText = "Drag to change movement speed and length";
     } else if (keyIsDown(SHIFT)) {
       tooltipText = "Drag to change size and rotation";
@@ -824,7 +826,7 @@ function draw() {
 
     if (isHovering) {
       tooltipText =
-        "Hold ALT/OPTION or SHIFT on your keyboard to change what happens when you drag a shape";
+        "Hold CMD or SHIFT on your keyboard to change what happens when you drag a shape";
     }
 
     push();
@@ -895,7 +897,7 @@ function mouseMoved() {
     }
   });
   if (hoveredShapeIndex > -1) {
-    if (keyIsDown(ALT) || keyIsDown(SHIFT)) {
+    if (isCmdPressed() || keyIsDown(SHIFT)) {
       cursor("move");
     } else {
       cursor("grab");
