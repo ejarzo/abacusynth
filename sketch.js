@@ -65,7 +65,7 @@ OUTPUT_NODE.chain(amplitudeEnvelope, analyzer, Tone.Destination);
 Tone.Transport.start();
 amplitudeEnvelope.triggerAttack();
 
-const isCmdPressed = () => keyIsDown(224);
+const isCmdPressed = () => keyIsDown(224) || keyIsDown(91) || keyIsDown(ALT);
 
 const dragBehaviorControls = [
   {
@@ -77,7 +77,7 @@ const dragBehaviorControls = [
   },
   {
     getIsSelected: isCmdPressed,
-    label: "CMD",
+    label: "CMD/OPT",
     renderLogo: () => {
       translate(0, -10);
       drawCrosshair();
