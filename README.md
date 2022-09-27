@@ -1,7 +1,9 @@
 # Abacusynth
 
-This repo contains code for the web page. For the Ableton Plugin, see [here](https://eliasjarzombek.gumroad.com/l/abacusynth). For the hardware device, see [here](https://eliasjarzombek.com/abacusynth-hardware).
 https://abacusynth.eliasjarzombek.com/
+
+This repo contains code for the web page. For the Ableton Plugin, see [here](https://eliasjarzombek.gumroad.com/l/abacusynth). For the hardware device, see [here](https://eliasjarzombek.com/abacusynth-hardware).
+
 
 ![osc-screenshot5](https://user-images.githubusercontent.com/9386882/109991490-5d98b080-7cd8-11eb-9fde-a393c7e45085.png)
 
