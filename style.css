@@ -92,3 +92,13 @@ button:active {
 a {
   color: #fff;
 }
+
+.randomize-button {
+  background: linear-gradient(135deg, #6a5e76, #7b618e, #5a4e63);
+  /* color: #222; */
+  /* box-shadow: 0 0 10px rgba(123, 97, 142, 0.5); */
+}
+
+.randomize-button:hover {
+  background: linear-gradient(135deg, #9b7eb7, #a06fc5, #775b8d);
+}

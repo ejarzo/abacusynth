@@ -614,6 +614,7 @@ function setup() {
   resetButton.mouseClicked(clearAllShapes);
 
   const randomizeButton = createButton("Randomize");
+  randomizeButton.addClass("randomize-button");
   randomizeButton.position(X_PAD / 2 + 55, inputHeight + 32);
   randomizeButton.parent("#sketch");
   randomizeButton.mouseClicked(() => {
