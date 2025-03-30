@@ -15,7 +15,11 @@
   </head>
 
   <body>
-    <div class="banner">
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const hideBanner = urlParams.get("nobanner") === "1";
+    </script>
+    <div class="banner" style="display: none" id="plugin-banner">
       <a href="https://eliasjarzombek.gumroad.com/l/abacusynth" target="blank"
         >Download the Plugin for Ableton Live</a
       >
@@ -33,5 +37,10 @@
       data-domain="abacusynth.eliasjarzombek.com"
       src="https://plausible.io/js/plausible.js"
     ></script>
+    <script>
+      if (!hideBanner) {
+        document.getElementById("plugin-banner").style.display = "block";
+      }
+    </script>
   </body>
 </html>

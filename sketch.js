@@ -609,12 +609,12 @@ function setup() {
     buttonClick.start();
     oscillatorShapes.length = 0;
   };
-  resetButton.position(X_PAD / 2, inputHeight + 16);
+  resetButton.position(X_PAD / 2, inputHeight + 32);
   resetButton.parent("#sketch");
   resetButton.mouseClicked(clearAllShapes);
 
   const randomizeButton = createButton("Randomize");
-  randomizeButton.position(X_PAD / 2 + 55, inputHeight + 16);
+  randomizeButton.position(X_PAD / 2 + 55, inputHeight + 32);
   randomizeButton.parent("#sketch");
   randomizeButton.mouseClicked(() => {
     clearAllShapes();
@@ -808,7 +808,7 @@ function draw() {
 
   // mouse drag behavior visual feedback
   push();
-  translate(buttonPanelPos.x, buttonPanelPos.y + 140);
+  translate(buttonPanelPos.x, buttonPanelPos.y + 132);
   fill(0, 0, 100, 0.9);
   noStroke();
 
